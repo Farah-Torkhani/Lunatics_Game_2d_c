@@ -6,7 +6,7 @@ void displaySettingMenu(SDL_Surface *screen, int *action)
     int loopCondition = 1, muteCondition = 0, mute=0, volume=100;
     
     //declaration surfaces positions
-    SDL_Surface *SettingsBg = NULL, *textvolume =NULL,*right_black=NULL,*right_oran=NULL ,*left_black=NULL,*left_oran=NULL ,*textkeyboard=NULL,*textlanguage=NULL,*vol0, *TextMainSettings = NULL, *volup, *voldown, *TextResolution = NULL, *Textfull = NULL, *Textwind = NULL, *muteImg = NULL, *backImg = NULL;
+    SDL_Surface *testscreen, *SettingsBg = NULL, *textvolume =NULL,*right_black=NULL,*right_oran=NULL ,*left_black=NULL,*left_oran=NULL ,*textkeyboard=NULL,*textlanguage=NULL,*vol0, *TextMainSettings = NULL, *volup, *voldown, *TextResolution = NULL, *Textfull = NULL, *Textwind = NULL, *muteImg = NULL, *backImg = NULL;
     SDL_Rect SettingBgPos,textvolumePos, TextMainSettingsPos, volBarPos, volPlusPos, volMinusPos, ResolPos, fullPos, WindPos, mutePos, backPos;
 
     //declaration son
@@ -15,7 +15,7 @@ void displaySettingMenu(SDL_Surface *screen, int *action)
     Mix_Chunk *hoverSound;
 
     //set setting screen
-    screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_RESIZABLE | SDL_DOUBLEBUF);
+    //screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_RESIZABLE | SDL_DOUBLEBUF);
 
     //set setting bg image
     SettingsBg = IMG_Load("Assets/graphic/Settings/bg.jpg");
@@ -283,37 +283,15 @@ void displaySettingMenu(SDL_Surface *screen, int *action)
                          Mix_VolumeMusic(0);                                    
                         }
                      }
-                     int full=0;
+                   
                      // full screen---------- attention à verefier
                      
-                     if ((event.button.x > 910 && event.button.y > 360 && event.button.x < 955 && event.button.y < 407)&&(full==0))               		    
+                     if (event.button.x > 910 && event.button.y > 360 && event.button.x < 955 && event.button.y < 407)              		    
                         {
-                        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 0,SDL_HWPALETTE|SDL_DOUBLEBUF|SDL_FULLSCREEN |SDL_RESIZABLE);
-                        SDL_Delay(100);
-full=1;
-                        }
-                        if ((event.button.x > 680 && event.button.y > 360 && event.button.x < 720 && event.button.y < 407)&&(full==0) )              		    
-                        {
-                        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 0,SDL_HWPALETTE|SDL_DOUBLEBUF|SDL_FULLSCREEN |SDL_RESIZABLE);
-                        SDL_Delay(100);
-                        full=1;
-                        }
-                       
-                     if ((event.button.x > 910 && event.button.y > 360 && event.button.x < 955 && event.button.y < 407) &&(full==1))  
-                        {
-                        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 0,SDL_HWPALETTE|SDL_DOUBLEBUF|SDL_RESIZABLE);
-                        SDL_Delay(100);
-                        full=0;
-                        }
-                         
-                     if ((event.button.x > 680 && event.button.y > 360 && event.button.x < 720 && event.button.y < 407) &&(full==1))  
-                        {
-                        screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 0,SDL_HWPALETTE|SDL_DOUBLEBUF|SDL_RESIZABLE);
-                        SDL_Delay(100);
-                        full=0;
+                            screen = SDL_SetVideoMode(1280, 720, 0,SDL_HWPALETTE|SDL_DOUBLEBUF|SDL_FULLSCREEN |SDL_RESIZABLE);
+
                         
-                        }
-                            //blint all settings elements
+                         //blint all settings elements
                             SDL_BlitSurface(SettingsBg, NULL, screen, &SettingBgPos);
                             //SDL_BlitSurface(TextMainSettings, NULL, screen, &TextMainSettingsPos);
 
@@ -327,7 +305,30 @@ full=1;
                             SDL_BlitSurface(TextResolution, NULL, screen, &ResolPos);
                             SDL_BlitSurface(Textfull, NULL, screen, &SettingBgPos);
                             SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
+                            SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos); 
+                        }
+                        if (event.button.x > 680 && event.button.y > 360 && event.button.x < 720 && event.button.y < 407)             		    
+                        {
+                           screen = SDL_SetVideoMode(1280, 720, 0,SDL_HWPALETTE|SDL_DOUBLEBUF|SDL_RESIZABLE);                       
+                            //blint all settings elements
+                            SDL_BlitSurface(SettingsBg, NULL, screen, &SettingBgPos);
+                            //SDL_BlitSurface(TextMainSettings, NULL, screen, &TextMainSettingsPos);
+
+                            SDL_BlitSurface(backImg, NULL, screen, &backPos);
+                            SDL_BlitSurface(vol0, NULL, screen, &volBarPos);
+                            SDL_BlitSurface(textvolume,NULL, screen, &textvolumePos);
+                            SDL_BlitSurface(textkeyboard,NULL, screen, &textvolumePos);
+                            SDL_BlitSurface(textlanguage,NULL, screen, &textvolumePos);
+                            SDL_BlitSurface(volup, NULL, screen, &volPlusPos);
+                            SDL_BlitSurface(voldown, NULL, screen, &volMinusPos);
+                            SDL_BlitSurface(TextResolution, NULL, screen, &ResolPos);
+                            SDL_BlitSurface(Textwind, NULL, screen, &SettingBgPos);
+                            SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
                             SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
+                        }
+                       
+                   
+
                        
 
     
