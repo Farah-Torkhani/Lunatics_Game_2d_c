@@ -8,8 +8,7 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_mixer.h>
+#include "menu.h"
 #include "settings.h"
-#define SCREEN_WIDTH 1300
-#define SCREEN_HEIGHT 740
 
 #endif

@@ -8,6 +8,8 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_mixer.h>
-void displaySettingMenu(SDL_Surface *screen, int *action);
+
+void settingsMenu(SDL_Surface *screen, int *action);
+void saveVolume(int music);
 
 #endif

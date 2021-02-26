@@ -1,563 +1,541 @@
 #include "Headers/headers.h"
-#include "Headers/settings.h"
-void displaySettingMenu(SDL_Surface *screen, int *action)
+#include "Headers/menu.h"
+
+void settingsMenu(SDL_Surface *screen, int *action)
 {
-    //simple variable
-    int loopCondition = 1, muteCondition = 0, mute=0, volume=100;
-    int select=-1;
-    //declaration surfaces positions
-    SDL_Surface *testscreen, *SettingsBg = NULL, *textvolume =NULL,*right_black=NULL,*right_lan=NULL ,*left_black=NULL,*left_lan=NULL ,*textkeyboard=NULL,*textlanguage=NULL,*vol0, *TextMainSettings = NULL, *volup, *voldown, *TextResolution = NULL, *Textfull = NULL, *Textwind = NULL, *muteImg = NULL, *backImg = NULL,*english=NULL,*frensh=NULL;
-    SDL_Rect SettingBgPos,textvolumePos, TextMainSettingsPos, volBarPos, volPlusPos, volMinusPos, ResolPos, fullPos, WindPos, mutePos, backPos;
+    //declare simple variables
+    int done = 1, volInputIndex = 0, prevVolIndex = 0, nextVolIndex = 0, volBarIndex, resInputIndex = 0, prevResIndex = 0, nextResIndex = 0, resModeIndex = 0;
+    int langInputIndex = 0, prevLangIndex = 0, nextLangIndex = 0, langModeIndex = 0, contInputIndex = 0, backIndex = 0;
+    int musicVol;
 
-    //declaration son
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024);
-    Mix_Music *bgMusic;
+    //simple variable hover test
+    int volInputHover = 1, resInputHover = 1, langInputHover = 1, contInputHover = 1, backHover = 1;
+
+    //declare the settings images
+    SDL_Surface *settingBG = NULL, *volInput[2], *prevVol[2], *nextVol[2], *volBar[6], *resInput[2], *prevRes[2], *nextRes[2], *resMode[2];
+    SDL_Surface *langInput[2], *prevLang[2], *nextLang[2], *langMode[2], *controllers[2], *back[2];
+
+    //declare and set the global position
+    SDL_Rect pos;
+    pos.x = 0;
+    pos.y = 0;
+
+    //initialise audio
+    Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024);
+
+    //declare and set music
+    Mix_Music *music;
+    music = Mix_LoadMUS("Assets/graphic/MainMenu/ost.mp3");
+
+    //declare and set the hover sound effect
     Mix_Chunk *hoverSound;
+    hoverSound = Mix_LoadWAV("Assets/graphic/settings/click.wav");
 
-    //set setting screen
-    //screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_RESIZABLE | SDL_DOUBLEBUF);
+    //get the music volume from the file
+    getVolume(&musicVol);
 
-    //set setting bg image
-    SettingsBg = IMG_Load("Assets/graphic/Settings/settingsMenuBg.jpg");
+    volBarIndex = musicVol / 20;
 
+    //set the music volume andplay it
+    Mix_VolumeMusic(musicVol);
+    Mix_PlayMusic(music, -1);
 
-    //set setting volume images
-    vol0 = IMG_Load("Assets/graphic/Settings/vol5.png");
-    volup = IMG_Load("Assets/graphic/Settings/nextVol_normal.png");
-    voldown = IMG_Load("Assets/graphic/Settings/prevVol_normal.png");
+    hoverSound = Mix_LoadWAV("Assets/graphic/settings/click.wav");
 
-    //set bouttons text
-    textvolume= IMG_Load("Assets/graphic/Settings/VolumeInput_normal.png");
-    textkeyboard= IMG_Load("Assets/graphic/Settings/controllers_normal.png");
-    textlanguage= IMG_Load("Assets/graphic/Settings/languageInput_normal.png");
-    TextResolution = IMG_Load("Assets/graphic/Settings/resInput_normal.png");
+    //set settings bg
+    settingBG = IMG_Load("Assets/graphic/settings/settingsMenuBg.jpg");
 
-    //set back button img
-    backImg = IMG_Load("Assets/graphic/Settings/back_normal.png");
+    //set volume input images
+    volInput[0] = IMG_Load("Assets/graphic/settings/VolumeInput_normal.png");
+    volInput[1] = IMG_Load("Assets/graphic/settings/VolumeInput_hover.png");
 
-    //set Resolution images
-    right_black= IMG_Load("Assets/graphic/Settings/nextRes_normal.png");
-    left_black= IMG_Load("Assets/graphic/Settings/prevRes_normal.png");
-    Textwind = IMG_Load("Assets/graphic/Settings/windowed.png");
-    Textfull = IMG_Load("Assets/graphic/Settings/fulScreen.png");
+    prevVol[0] = IMG_Load("Assets/graphic/settings/prevVol_normal.png");
+    prevVol[1] = IMG_Load("Assets/graphic/settings/prevVol_hover.png");
 
-    //set Language images
-    english=IMG_Load("Assets/graphic/Settings/english.png");
-    frensh=IMG_Load("Assets/graphic/Settings/frensh.png");
-    right_lan=IMG_Load("Assets/graphic/Settings/nextLanguage_normal.png");
-    left_lan=IMG_Load("Assets/graphic/Settings/prevLanguage_normal.png");
-    //set setting elements positions
-    volBarPos.x = 710;
-    volBarPos.y = 215;
+    nextVol[0] = IMG_Load("Assets/graphic/settings/nextVol_normal.png");
+    nextVol[1] = IMG_Load("Assets/graphic/settings/nextVol_hover.png");
 
-    textvolumePos.x = 0;
-    textvolumePos.y = 0;
+    volBar[0] = IMG_Load("Assets/graphic/settings/vol0.png");
+    volBar[1] = IMG_Load("Assets/graphic/settings/vol1.png");
+    volBar[2] = IMG_Load("Assets/graphic/settings/vol2.png");
+    volBar[3] = IMG_Load("Assets/graphic/settings/vol3.png");
+    volBar[4] = IMG_Load("Assets/graphic/settings/vol4.png");
+    volBar[5] = IMG_Load("Assets/graphic/settings/vol5.png");
 
-    volPlusPos.x = 842;
-    volPlusPos.y = 310;
+    //set resolution input images
+    resInput[0] = IMG_Load("Assets/graphic/settings/resInput_normal.png");
+    resInput[1] = IMG_Load("Assets/graphic/settings/resInput_hover.png");
 
-    volMinusPos.x = 0;
-    volMinusPos.y = 0;
+    prevRes[0] = IMG_Load("Assets/graphic/settings/prevRes_normal.png");
+    prevRes[1] = IMG_Load("Assets/graphic/settings/prevRes_hover.png");
 
-    ResolPos.x = 0;
-    ResolPos.y = 0;
+    nextRes[0] = IMG_Load("Assets/graphic/settings/nextRes_normal.png");
+    nextRes[1] = IMG_Load("Assets/graphic/settings/nextRes_hover.png");
 
-    WindPos.x = 550;
-    WindPos.y = 190;
+    resMode[0] = IMG_Load("Assets/graphic/settings/windowed.png");
+    resMode[1] = IMG_Load("Assets/graphic/settings/fulScreen.png");
 
-    fullPos.x = 750;
-    fullPos.y = 190;
+    //set language input images
+    langInput[0] = IMG_Load("Assets/graphic/settings/languageInput_normal.png");
+    langInput[1] = IMG_Load("Assets/graphic/settings/languageInput_hover.png");
 
-    mutePos.x = 500;
-    mutePos.y = 500;
+    prevLang[0] = IMG_Load("Assets/graphic/settings/prevLanguage_normal.png");
+    prevLang[1] = IMG_Load("Assets/graphic/settings/prevLanguage_hover.png");
 
-    TextMainSettingsPos.x = 575;
-    TextMainSettingsPos.y = 30;
+    nextLang[0] = IMG_Load("Assets/graphic/settings/nextLanguage_normal.png");
+    nextLang[1] = IMG_Load("Assets/graphic/settings/nextLanguage_hover.png");
 
-    SettingBgPos.x = 0;
-    SettingBgPos.y = 0;
+    langMode[0] = IMG_Load("Assets/graphic/settings/english.png");
+    langMode[1] = IMG_Load("Assets/graphic/settings/frensh.png");
 
-    backPos.x = 10;
-    backPos.y = 10;
+    //set controllers input images
+    controllers[0] = IMG_Load("Assets/graphic/settings/controllers_normal.png");
+    controllers[1] = IMG_Load("Assets/graphic/settings/controllers_hover.png");
 
-    //blint all settings elements
-    SDL_BlitSurface(SettingsBg, NULL, screen, &SettingBgPos);
-    //SDL_BlitSurface(TextMainSettings, NULL, screen, &TextMainSettingsPos);
+    //set back images
+    back[0] = IMG_Load("Assets/graphic/settings/back_normal.png");
+    back[1] = IMG_Load("Assets/graphic/settings/back_hover.png");
 
-    SDL_BlitSurface(backImg, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(vol0, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(textvolume,NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(textkeyboard,NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(textlanguage,NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(volup, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(voldown, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(TextResolution, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(Textwind, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(english, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(right_lan, NULL, screen, &SettingBgPos);
-    SDL_BlitSurface(left_lan, NULL, screen, &SettingBgPos);
-   // SDL_BlitSurface(right_oran, NULL, screen, &SettingBgPos);
-    //SDL_BlitSurface(left_oran, NULL, screen, &SettingBgPos);
-   
-   
-   
-   
-    //event declaration
+    //declare the event
     SDL_Event event;
 
-    //Settings Menu loup
-    while (loopCondition)
+    while (done)
     {
-        SDL_WaitEvent(&event);
-        
-        switch (event.type)
+
+        //SDL_FillRect(screen, NULL, 0x000000);
+        SDL_BlitSurface(settingBG, NULL, screen, &pos);
+
+        //blit the volume input images
+        SDL_BlitSurface(volInput[volInputIndex], NULL, screen, &pos);
+        SDL_BlitSurface(prevVol[prevVolIndex], NULL, screen, &pos);
+        SDL_BlitSurface(nextVol[nextVolIndex], NULL, screen, &pos);
+        SDL_BlitSurface(volBar[volBarIndex], NULL, screen, &pos);
+
+        //blit resolution input images
+        SDL_BlitSurface(resInput[resInputIndex], NULL, screen, &pos);
+        SDL_BlitSurface(prevRes[prevResIndex], NULL, screen, &pos);
+        SDL_BlitSurface(nextRes[nextResIndex], NULL, screen, &pos);
+        SDL_BlitSurface(resMode[resModeIndex], NULL, screen, &pos);
+
+        //blit language input images
+        SDL_BlitSurface(langInput[langInputIndex], NULL, screen, &pos);
+        SDL_BlitSurface(prevLang[prevLangIndex], NULL, screen, &pos);
+        SDL_BlitSurface(nextLang[nextLangIndex], NULL, screen, &pos);
+        SDL_BlitSurface(langMode[langModeIndex], NULL, screen, &pos);
+
+        //blit controllers input images
+        SDL_BlitSurface(controllers[contInputIndex], NULL, screen, &pos);
+
+        //blit back images
+        SDL_BlitSurface(back[backIndex], NULL, screen, &pos);
+
+        SDL_Flip(screen);
+
+        if (SDL_WaitEvent(&event))
         {
-        case SDL_QUIT:
-            loopCondition = 0;
-            break;
-
-        case SDL_KEYDOWN:
-
-            if (event.key.keysym.sym == SDLK_ESCAPE)
-                loopCondition = 0;
-
-            if (event.key.keysym.sym == SDLK_m)
+            switch (event.type)
             {
-                if (muteCondition == 0)
+            case SDL_QUIT:
+                done = 0;
+                SDL_Quit();
+                break;
+
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym)
                 {
-                    muteCondition = 1;
-                    Mix_VolumeMusic(0);
-                    Mix_VolumeChunk(hoverSound, 0);
-                    SDL_Delay(100);
+                case SDLK_ESCAPE:
+                    mainMenu(screen, action);
+                    break;
+
+                case SDLK_UP:
+                    if (volInputIndex == 0 && resInputIndex == 0 && langInputIndex == 0 && contInputIndex == 0 && backIndex == 0)
+                    {
+                        volInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 1 && resInputIndex == 0 && langInputIndex == 0 && contInputIndex == 0 && backIndex == 0)
+                    {
+                        volInputIndex = 0;
+                        backIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 0 && resInputIndex == 0 && langInputIndex == 0 && contInputIndex == 0 && backIndex == 1)
+                    {
+                        backIndex = 0;
+                        contInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 0 && resInputIndex == 0 && langInputIndex == 0 && contInputIndex == 1 && backIndex == 0)
+                    {
+                        contInputIndex = 0;
+                        langInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 0 && resInputIndex == 0 && langInputIndex == 1 && contInputIndex == 0 && backIndex == 0)
+                    {
+                        langInputIndex = 0;
+                        resInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 0 && resInputIndex == 1 && langInputIndex == 0 && contInputIndex == 0 && backIndex == 0)
+                    {
+                        resInputIndex = 0;
+                        volInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    break;
+
+                case SDLK_DOWN:
+                    if (volInputIndex == 0 && resInputIndex == 0 && langInputIndex == 0 && contInputIndex == 0 && backIndex == 0)
+                    {
+                        volInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 1 && resInputIndex == 0 && langInputIndex == 0 && contInputIndex == 0 && backIndex == 0)
+                    {
+                        volInputIndex = 0;
+                        resInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 0 && resInputIndex == 1 && langInputIndex == 0 && contInputIndex == 0 && backIndex == 0)
+                    {
+                        resInputIndex = 0;
+                        langInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 0 && resInputIndex == 0 && langInputIndex == 1 && contInputIndex == 0 && backIndex == 0)
+                    {
+                        langInputIndex = 0;
+                        contInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 0 && resInputIndex == 0 && langInputIndex == 0 && contInputIndex == 1 && backIndex == 0)
+                    {
+                        contInputIndex = 0;
+                        backIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else if (volInputIndex == 0 && resInputIndex == 0 && langInputIndex == 0 && contInputIndex == 0 && backIndex == 1)
+                    {
+                        backIndex = 0;
+                        volInputIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    break;
+                case SDLK_LEFT:
+                    if (volInputIndex == 1)
+                    {
+                        if (volBarIndex > 0)
+                        {
+                            volBarIndex--;
+                            musicVol = volBarIndex * 20;
+                            saveVolume(musicVol);
+                            Mix_VolumeMusic(musicVol);
+                        }
+                    }
+                    else if (resInputIndex == 1)
+                    {
+                        if (resModeIndex == 0)
+                        {
+                            resModeIndex = 1;
+                            screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+                        }
+                        else
+                        {
+                            resModeIndex = 0;
+                            screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+                        }
+                    }
+                    else if (langInputIndex == 1)
+                    {
+                        if (langModeIndex == 0)
+                        {
+                            langModeIndex = 1;
+                        }
+                        else
+                        {
+                            langModeIndex = 0;
+                        }
+                    }
+                    break;
+                case SDLK_RIGHT:
+                    if (volInputIndex == 1)
+                    {
+                        if (volBarIndex < 5)
+                        {
+                            volBarIndex++;
+                            musicVol = volBarIndex * 20;
+                            saveVolume(musicVol);
+                            Mix_VolumeMusic(musicVol);
+                        }
+                    }
+                    else if (resInputIndex == 1)
+                    {
+                        if (resModeIndex == 0)
+                        {
+                            resModeIndex = 1;
+                            screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+                        }
+                        else
+                        {
+                            resModeIndex = 0;
+                            screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_SWSURFACE | SDL_DOUBLEBUF);
+                        }
+                    }
+                    else if (langInputIndex == 1)
+                    {
+                        if (langModeIndex == 0)
+                        {
+                            langModeIndex = 1;
+                        }
+                        else
+                        {
+                            langModeIndex = 0;
+                        }
+                    }
+                    break;
+                case SDLK_RETURN:
+                    if (backIndex == 1)
+                    {
+                        mainMenu(screen, action);
+                    }
+                    break;
+                }
+                break;
+
+            case SDL_MOUSEMOTION:
+                volInputIndex = 0;
+                prevVolIndex = 0;
+                nextVolIndex = 0;
+
+                resInputIndex = 0;
+                prevResIndex = 0;
+                nextResIndex = 0;
+
+                langInputIndex = 0;
+                prevLangIndex = 0;
+                nextLangIndex = 0;
+
+                contInputIndex = 0;
+
+                backIndex = 0;
+
+                //volume input
+                if (event.motion.x > 350 && event.motion.y > 178 && event.motion.x < 930 && event.motion.y < 242)
+                {
+                    volInputIndex = 1;
+                    if (volInputHover == 1)
+                    {
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    volInputHover = 0;
                 }
                 else
                 {
-                    muteCondition = 0;
-                    Mix_VolumeMusic(100);
-                    Mix_VolumeChunk(hoverSound, 100);
-                    SDL_Delay(100);
+                    volInputHover = 1;
                 }
-            }
-           
-            if ((event.key.keysym.sym == SDLK_DOWN)&&(select<=4))
-            {
-                select++;
-                if(select==0)
+                //hover prevVol
+                if (event.motion.x > 557 && event.motion.y > 191 && event.motion.x < 585 && event.motion.y < 226)
                 {
-                        SDL_FreeSurface(backImg);
-                         backImg= IMG_Load("Assets/graphic/Settings/back_normal.png");
-                         SDL_BlitSurface(backImg,NULL,screen,&SettingBgPos); 
-                        SDL_FreeSurface(textvolume);
-                         textvolume= IMG_Load("Assets/graphic/Settings/VolumeInput_hover.png");
-                         SDL_BlitSurface(textvolume,NULL,screen,&SettingBgPos); 
-                         SDL_BlitSurface(vol0, NULL, screen, &SettingBgPos);
-                        SDL_BlitSurface(volup, NULL, screen, &SettingBgPos);
-                        SDL_BlitSurface(voldown, NULL, screen, &SettingBgPos);
+                    prevVolIndex = 1;
                 }
-                else if(select==1)
+                //hover nextVol
+                if (event.motion.x > 874 && event.motion.y > 191 && event.motion.x < 900 && event.motion.y < 226)
                 {
-                        SDL_FreeSurface(textvolume);
-                         textvolume= IMG_Load("Assets/graphic/Settings/VolumeInput_normal.png");
-                         SDL_BlitSurface(textvolume,NULL,screen,&SettingBgPos); 
-                          SDL_BlitSurface(vol0, NULL, screen, &SettingBgPos);
-                        SDL_BlitSurface(volup, NULL, screen, &SettingBgPos);
-                        SDL_BlitSurface(voldown, NULL, screen, &SettingBgPos);
-                        SDL_FreeSurface(TextResolution);
-                         TextResolution= IMG_Load("Assets/graphic/Settings/resInput_hover.png");
-                         SDL_BlitSurface(TextResolution,NULL,screen,&SettingBgPos); 
-                          SDL_BlitSurface(Textwind, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
+                    nextVolIndex = 1;
                 }
-                else if(select==2)
+                //volume input
+                //--------------------------------------------------------------------------
+
+                //res input
+                if (event.motion.x > 350 && event.motion.y > 276 && event.motion.x < 930 && event.motion.y < 341)
                 {
-                     SDL_FreeSurface(TextResolution);
-                         TextResolution= IMG_Load("Assets/graphic/Settings/resInput_normal.png");
-                         SDL_BlitSurface(TextResolution,NULL,screen,&SettingBgPos);
-                          SDL_BlitSurface(Textwind, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
-                     SDL_FreeSurface(textlanguage);
-                         textlanguage= IMG_Load("Assets/graphic/Settings/languageInput_hover.png");
-                         SDL_BlitSurface(textlanguage,NULL,screen,&SettingBgPos); 
-                          SDL_BlitSurface(english, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_lan, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_lan, NULL, screen, &SettingBgPos);
-                    
-                  } 
-                else if(select==3)
-                {
-                    
-                         SDL_FreeSurface(textlanguage);
-                         textlanguage= IMG_Load("Assets/graphic/Settings/languageInput_normal.png");
-                         SDL_BlitSurface(textlanguage,NULL,screen,&SettingBgPos); 
-                          SDL_BlitSurface(english, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_lan, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_lan, NULL, screen, &SettingBgPos);
-                        SDL_FreeSurface(textkeyboard);
-                         textkeyboard= IMG_Load("Assets/graphic/Settings/controllers_hover.png");
-                         SDL_BlitSurface(textkeyboard,NULL,screen,&SettingBgPos); 
+                    resInputIndex = 1;
+                    if (resInputHover == 1)
+                    {
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    resInputHover = 0;
                 }
-                
-                 else if(select==4)
+                else
                 {
-                    SDL_FreeSurface(textkeyboard);
-                         textkeyboard= IMG_Load("Assets/graphic/Settings/controllers_normal.png");
-                         SDL_BlitSurface(textkeyboard,NULL,screen,&SettingBgPos); 
-                        SDL_FreeSurface(backImg);
-                         backImg= IMG_Load("Assets/graphic/Settings/back_hover.png");
-                         SDL_BlitSurface(backImg,NULL,screen,&SettingBgPos); 
+                    resInputHover = 1;
+                }
+                //hover prevRes
+                if (event.motion.x > 628 && event.motion.y > 291 && event.motion.x < 657 && event.motion.y < 327)
+                {
+                    prevResIndex = 1;
                 }
 
+                //hover nextRes
+                if (event.motion.x > 873 && event.motion.y > 291 && event.motion.x < 900 && event.motion.y < 327)
+                {
+                    nextResIndex = 1;
+                }
+                //res input
+                //--------------------------------------------------------------------------
 
-            }
-            if ((event.key.keysym.sym == SDLK_UP)&&(select>=0))
-            {
-                select--;
-                if(select==0)
+                //language input
+                if (event.motion.x > 350 && event.motion.y > 377 && event.motion.x < 930 && event.motion.y < 442)
                 {
-                     SDL_FreeSurface(TextResolution);
-                         TextResolution= IMG_Load("Assets/graphic/Settings/resInput_normal.png");
-                         SDL_BlitSurface(TextResolution,NULL,screen,&SettingBgPos);
-                        SDL_FreeSurface(textvolume);
-                        SDL_BlitSurface(Textwind, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
-                         textvolume= IMG_Load("Assets/graphic/Settings/VolumeInput_hover.png");
-                         SDL_BlitSurface(textvolume,NULL,screen,&SettingBgPos); 
-                         SDL_BlitSurface(vol0, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(volup, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(voldown, NULL, screen, &SettingBgPos);
-                         
+                    langInputIndex = 1;
+                    if (langInputHover == 1)
+                    {
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    langInputHover = 0;
                 }
-                else if(select==1)
+                else
                 {
-                   
-                         SDL_FreeSurface(textlanguage);
-                         textlanguage= IMG_Load("Assets/graphic/Settings/languageInput_normal.png");
-                         SDL_BlitSurface(textlanguage,NULL,screen,&SettingBgPos);
-                         SDL_BlitSurface(english, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_lan, NULL, screen, &SettingBgPos);
-                                SDL_BlitSurface(left_lan, NULL, screen, &SettingBgPos);
-                    SDL_FreeSurface(TextResolution);
-                         TextResolution= IMG_Load("Assets/graphic/Settings/resInput_hover.png");
-                         SDL_BlitSurface(TextResolution,NULL,screen,&SettingBgPos); 
-                         SDL_BlitSurface(Textwind, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
+                    langInputHover = 1;
                 }
-                else if(select==2)
+                //hover prevlang
+                if (event.motion.x > 628 && event.motion.y > 392 && event.motion.x < 657 && event.motion.y < 426)
                 {
-                    SDL_FreeSurface(textkeyboard);
-                         textkeyboard= IMG_Load("Assets/graphic/Settings/controllers_normal.png");
-                         SDL_BlitSurface(textkeyboard,NULL,screen,&SettingBgPos); 
-                     
-                   
-                          SDL_FreeSurface(textlanguage);
-                         textlanguage= IMG_Load("Assets/graphic/Settings/languageInput_hover.png");
-                         SDL_BlitSurface(textlanguage,NULL,screen,&SettingBgPos); 
-                          SDL_BlitSurface(english, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_lan, NULL, screen, &SettingBgPos);
-                                SDL_BlitSurface(left_lan, NULL, screen, &SettingBgPos);
-                }
-                else if(select==3)
-                {
-                    SDL_FreeSurface(backImg);
-                         backImg= IMG_Load("Assets/graphic/Settings/back_normal.png");
-                         SDL_BlitSurface(backImg,NULL,screen,&SettingBgPos); 
-                        SDL_FreeSurface(textkeyboard);
-                         textkeyboard= IMG_Load("Assets/graphic/Settings/controllers_hover.png");
-                         SDL_BlitSurface(textkeyboard,NULL,screen,&SettingBgPos); 
-                }
-                else if(select==4)
-                {
-                    SDL_FreeSurface(textvolume);
-                         textvolume= IMG_Load("Assets/graphic/Settings/VolumeInput_normal.png");
-                         SDL_BlitSurface(textvolume,NULL,screen,&SettingBgPos);
-                          SDL_BlitSurface(vol0, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(volup, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(voldown, NULL, screen, &SettingBgPos); 
-                        SDL_FreeSurface(backImg);
-                         backImg= IMG_Load("Assets/graphic/Settings/back_hover.png");
-                         SDL_BlitSurface(backImg,NULL,screen,&SettingBgPos); 
+                    prevLangIndex = 1;
                 }
 
-            }
-if ((event.key.keysym.sym == SDLK_DOWN)&&(select==4))
-{
-select=-1;
-}
-if ((event.key.keysym.sym == SDLK_UP)&&(select==0))
-{
-select=5;
-}
+                //hover nextlang
+                if (event.motion.x > 873 && event.motion.y > 392 && event.motion.x < 900 && event.motion.y < 426)
+                {
+                    nextLangIndex = 1;
+                }
+                //language input
+                //--------------------------------------------------------------------------
 
-if(event.key.keysym.sym == SDLK_RETURN )
-{
-    if(select ==4)
-    {
-        mainMenu(screen,&action);
-    }
-    
-}
-            break;
-        case SDL_MOUSEMOTION:
-          if (event.motion.x > 350 && event.motion.y > 175 && event.motion.x < 929 && event.motion.y < 240)
+                //controllers input
+                if (event.motion.x > 350 && event.motion.y > 475 && event.motion.x < 708 && event.motion.y < 540)
                 {
-                     SDL_FreeSurface(textvolume);
-                         textvolume= IMG_Load("Assets/graphic/Settings/VolumeInput_hover.png");
-                         SDL_BlitSurface(textvolume,NULL,screen,&SettingBgPos); 
-                         SDL_BlitSurface(vol0, NULL, screen, &SettingBgPos);
-                        SDL_BlitSurface(volup, NULL, screen, &SettingBgPos);
-                        SDL_BlitSurface(voldown, NULL, screen, &SettingBgPos);
-                        
+                    contInputIndex = 1;
+                    if (contInputHover == 1)
+                    {
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    contInputHover = 0;
+                }
+                else
+                {
+                    contInputHover = 1;
+                }
 
-                }
-             else
-             {
-                        SDL_FreeSurface(textvolume);
-                         textvolume= IMG_Load("Assets/graphic/Settings/VolumeInput_normal.png");
-                         SDL_BlitSurface(textvolume,NULL,screen,&SettingBgPos);
-                          SDL_BlitSurface(vol0, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(volup, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(voldown, NULL, screen, &SettingBgPos);
-             }  
-              
-           
-            if (event.motion.x > 557 && event.motion.y > 190 && event.motion.x < 585 && event.motion.y < 225)
-                {
-                    
-                   SDL_FreeSurface(voldown);
-                  voldown= IMG_Load("Assets/graphic/Settings/prevVol_hover.png");
-                  SDL_BlitSurface(voldown, NULL, screen, &SettingBgPos);
-                }
-                 else
-             {
-                  SDL_FreeSurface(voldown);
-                  voldown= IMG_Load("Assets/graphic/Settings/prevVol_normal.png");
-                  SDL_BlitSurface(voldown, NULL, screen, &SettingBgPos);
-             }   
-            if (event.motion.x > 875 && event.motion.y > 190 && event.motion.x < 900 && event.motion.y < 225)
-                {
-                   
-                    SDL_FreeSurface(volup);
-                  volup= IMG_Load("Assets/graphic/Settings/nextVol_hover.png");
-                  SDL_BlitSurface(volup, NULL, screen, &SettingBgPos);
-                }
-                else{
-                    SDL_FreeSurface(right_black);
-                  right_black= IMG_Load("Assets/graphic/Settings/nextRes_normal.png");
-                  SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-                }
-                if (event.motion.x > 350 && event.motion.y > 275 && event.motion.x < 929 && event.motion.y < 340)
-                {
-                     SDL_FreeSurface(TextResolution);
-                         TextResolution= IMG_Load("Assets/graphic/Settings/resInput_hover.png");
-                         SDL_BlitSurface(TextResolution,NULL,screen,&SettingBgPos); 
-                          SDL_BlitSurface(Textwind, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
-                }
-                        
+                //controllers input
+                //--------------------------------------------------------------------------
 
-                
-             else
-             {
-                       SDL_FreeSurface(TextResolution);
-                         TextResolution= IMG_Load("Assets/graphic/Settings/resInput_normal.png");
-                         SDL_BlitSurface(TextResolution,NULL,screen,&SettingBgPos);
-                          SDL_BlitSurface(Textwind, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
-             }  
-              
-           
-            if (event.motion.x > 628 && event.motion.y > 290 && event.motion.x < 655 && event.motion.y < 325)
+                //back button
+                if (event.motion.x > 560 && event.motion.y > 614 && event.motion.x < 720 && event.motion.y < 678)
                 {
-                    
-                   SDL_FreeSurface(left_black);
-                  left_black= IMG_Load("Assets/graphic/Settings/prevRes_hover.png");
-                  SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
+                    backIndex = 1;
+                    if (backHover == 1)
+                    {
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    backHover = 0;
                 }
-             else
-             {
-                  SDL_FreeSurface(left_black);
-                  left_black= IMG_Load("Assets/graphic/Settings/prevRes_normal.png");
-                  SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
-             }   
-            if (event.motion.x > 872 && event.motion.y > 290 && event.motion.x < 900 && event.motion.y < 325)
+                else
                 {
-                   
-                    SDL_FreeSurface(right_black);
-                  right_black= IMG_Load("Assets/graphic/Settings/nextRes_hover.png");
-                  SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
+                    backHover = 1;
                 }
-                else{
-                    SDL_FreeSurface(right_black);
-                  right_black= IMG_Load("Assets/graphic/Settings/nextRes_normal.png");
-                  SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
+
+                //back button
+                //--------------------------------------------------------------------------
+
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    //volume input
+                    if (nextVolIndex == 1)
+                    {
+                        if (volBarIndex < 5)
+                        {
+                            volBarIndex++;
+                            musicVol = volBarIndex * 20;
+                            saveVolume(musicVol);
+                            Mix_VolumeMusic(musicVol);
+                        }
+                    }
+
+                    if (prevVolIndex == 1)
+                    {
+                        if (volBarIndex > 0)
+                        {
+                            volBarIndex--;
+                            musicVol = volBarIndex * 20;
+                            saveVolume(musicVol);
+                            Mix_VolumeMusic(musicVol);
+                        }
+                    }
+                    //volume input
+                    //------------------------------------------------------------------------------
+
+                    //resolution input
+                    if (nextResIndex == 1)
+                    {
+                        if (resModeIndex == 0)
+                        {
+                            resModeIndex = 1;
+                            screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+                        }
+                        else
+                        {
+                            resModeIndex = 0;
+                            screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_SWSURFACE | SDL_DOUBLEBUF);
+                        }
+                    }
+
+                    if (prevResIndex == 1)
+                    {
+                        if (resModeIndex == 0)
+                        {
+                            resModeIndex = 1;
+                            screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
+                        }
+                        else
+                        {
+                            resModeIndex = 0;
+                            screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_SWSURFACE | SDL_DOUBLEBUF);
+                        }
+                    }
+                    //resolution input
+                    //------------------------------------------------------------------------------
+
+                    //language input
+                    if (nextLangIndex == 1)
+                    {
+                        if (langModeIndex == 0)
+                        {
+                            langModeIndex = 1;
+                        }
+                        else
+                        {
+                            langModeIndex = 0;
+                        }
+                    }
+
+                    if (prevLangIndex == 1)
+                    {
+                        if (langModeIndex == 0)
+                        {
+                            langModeIndex = 1;
+                        }
+                        else
+                        {
+                            langModeIndex = 0;
+                        }
+                    }
+                    //language input
+                    //------------------------------------------------------------------------------
                 }
                 break;
-        case SDL_MOUSEBUTTONDOWN:
-            
-            //Return Click-------------------
-            if (event.button.x > 10 && event.button.y > 10 && event.button.x < 100 && event.button.y < 60)
-            {
-                mainMenu(screen, &action);
             }
-
-           
-
-            //VolUp  Click-------------------
-
-            if ((event.button.x > 873&& event.button.y > 190 && event.button.x < 900 && event.button.y < 585)&& (volume<=100))        {
-                         volume+=20;
-                          volBarPos.x = 0;
-                          volBarPos.y = 0;
-                        if(volume==20)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol1.png");
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos); 
-                         Mix_VolumeMusic(20);
-                         
-                                   
-                        }
-                         else if(volume==40)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol2.png"); 
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos);   
-                         Mix_VolumeMusic(40); 
-                       
-                                 
-                        }
-                       else if(volume==60)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol3.png"); 
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos); 
-                         Mix_VolumeMusic(60);
-                        
-                                    
-                        }
-                        else if(volume==80)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol4.png");  
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos);  
-                         Mix_VolumeMusic(80);                                  
-                        }
-                       else if(volume==100)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol5.png");  
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos);
-                         Mix_VolumeMusic(100);                                    
-                        }
-                     }
-
-                        //VolDown Click-------------------
-
-                        if ((event.button.x > 557 && event.button.y > 190 && event.button.x < 585 && event.button.y < 225)&& (volume>=0))
-                     {
-                         volume-=20;
-                          volBarPos.x = 0;
-                          volBarPos.y = 0;
-                        if(volume==20)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol1.png");
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos); 
-                         Mix_VolumeMusic(20);                                    
-                        }
-                       else if(volume==40)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol2.png"); 
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos);  
-                         Mix_VolumeMusic(40);                                   
-                        }
-                       else if(volume==60)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol3.png"); 
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos);  
-                         Mix_VolumeMusic(60);                                   
-                        }
-                        else if(volume==80)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol4.png");  
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos);
-                         Mix_VolumeMusic(80);                                    
-                        }
-                       else if(volume==0)
-                        {
-                            SDL_FreeSurface(vol0);
-                         vol0= IMG_Load("Assets/graphic/Settings/vol0.png");  
-                         SDL_BlitSurface(vol0,NULL,screen,&volBarPos);
-                         Mix_VolumeMusic(0);                                    
-                        }
-                     }
-                   
-                     // full screen---------- attention à verefier
-                     
-                     if (event.button.x > 872 && event.button.y > 290 && event.button.x < 900 && event.button.y < 325)              		    
-                        {
-                            screen = SDL_SetVideoMode(1280, 720, 0,SDL_HWPALETTE|SDL_DOUBLEBUF|SDL_FULLSCREEN |SDL_RESIZABLE);
-
-                        
-                         //blint all settings elements
-                            SDL_BlitSurface(SettingsBg, NULL, screen, &SettingBgPos);
-                            //SDL_BlitSurface(TextMainSettings, NULL, screen, &TextMainSettingsPos);
-
-                            SDL_BlitSurface(backImg, NULL, screen, &backPos);
-                            SDL_BlitSurface(vol0, NULL, screen, &volBarPos);
-                            SDL_BlitSurface(textvolume,NULL, screen, &textvolumePos);
-                            SDL_BlitSurface(textkeyboard,NULL, screen, &textvolumePos);
-                            SDL_BlitSurface(textlanguage,NULL, screen, &textvolumePos);
-                            SDL_BlitSurface(volup, NULL, screen, &volPlusPos);
-                            SDL_BlitSurface(voldown, NULL, screen, &volMinusPos);
-                            SDL_BlitSurface(TextResolution, NULL, screen, &ResolPos);
-                            SDL_BlitSurface(Textfull, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos); 
-                        }
-                        if (event.button.x > 628 && event.button.y > 290 && event.button.x < 655 && event.button.y < 325)             		    
-                        {
-                           screen = SDL_SetVideoMode(1280, 720, 0,SDL_HWPALETTE|SDL_DOUBLEBUF|SDL_RESIZABLE);                       
-                            //blint all settings elements
-                            SDL_BlitSurface(SettingsBg, NULL, screen, &SettingBgPos);
-                            //SDL_BlitSurface(TextMainSettings, NULL, screen, &TextMainSettingsPos);
-
-                            SDL_BlitSurface(backImg, NULL, screen, &backPos);
-                            SDL_BlitSurface(vol0, NULL, screen, &volBarPos);
-                            SDL_BlitSurface(textvolume,NULL, screen, &textvolumePos);
-                            SDL_BlitSurface(textkeyboard,NULL, screen, &textvolumePos);
-                            SDL_BlitSurface(textlanguage,NULL, screen, &textvolumePos);
-                            SDL_BlitSurface(volup, NULL, screen, &volPlusPos);
-                            SDL_BlitSurface(voldown, NULL, screen, &volMinusPos);
-                            SDL_BlitSurface(TextResolution, NULL, screen, &ResolPos);
-                            SDL_BlitSurface(Textwind, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(right_black, NULL, screen, &SettingBgPos);
-                            SDL_BlitSurface(left_black, NULL, screen, &SettingBgPos);
-                        }
-                       
-                   
-
-                       
-
-    
-   
-            break;
         }
-        SDL_Flip(screen);
     }
+}
 
-    //free memory
-    SDL_FreeSurface(SettingsBg);
-    SDL_FreeSurface(screen);
+//save the volume level to the file "volume.txt"
+void saveVolume(int music)
+{
+    FILE *fichier = NULL;
+    fichier = fopen("Fichier/volume.txt", "w");
+    fprintf(fichier, "%d", music);
+    fclose(fichier);
 }

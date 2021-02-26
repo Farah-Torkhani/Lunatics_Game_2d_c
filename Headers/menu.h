@@ -11,6 +11,6 @@
 
 void mainMenu(SDL_Surface *screen, int *action);
 int quit(SDL_Surface *ecran);
-void getVolume(int *music, int *sfx);
+void getVolume(int *music);
 
 #endif
