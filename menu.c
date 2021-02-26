@@ -3,7 +3,7 @@
 int quit(SDL_Surface *ecran)
 {
     //simple variable
-    int yesIndex = 0, noIndex = 0, done = 1;
+    int yesIndex = 0, noIndex = 0, done = 1, initExit = 0;
 
     //declare and set the position variable
     SDL_Rect pos;
@@ -28,11 +28,22 @@ int quit(SDL_Surface *ecran)
 
     while (done)
     {
+        //optimize the game
+        /*
+        if (initExit == 1)
+        {
+            SDL_FreeSurface(exitMenuBg);
+            SDL_FreeSurface(exitNo[noIndex]);
+            SDL_FreeSurface(exitYes[yesIndex]);
+        }
+        */
+
         //blint the background and the exit no and yes buttons
         SDL_BlitSurface(exitMenuBg, NULL, ecran, &pos);
         SDL_BlitSurface(exitNo[noIndex], NULL, ecran, &pos);
         SDL_BlitSurface(exitYes[yesIndex], NULL, ecran, &pos);
         SDL_Flip(ecran);
+        initExit = 1;
 
         SDL_WaitEvent(&event);
 
@@ -202,6 +213,7 @@ void mainMenu(SDL_Surface *screen, int *action)
 
     //declare the event
     SDL_Event event;
+    int initMenu = 0, playTest = 0, settingsTest = 0, creditsTest = 0, exitTest = 0, muteTest = 0;
 
     int i = 0;
     char filename[100];
@@ -210,6 +222,8 @@ void mainMenu(SDL_Surface *screen, int *action)
     int hoverPlay = 1, hoverOption = 1, hoverCredits = 1, hoverExit = 1, hoverMute;
     while (done)
     {
+        //SDL_FillRect(screen, NULL, 0x000000);
+
         //animate the background
         if (i != 0)
             SDL_FreeSurface(mainMenuBg);
@@ -221,18 +235,47 @@ void mainMenu(SDL_Surface *screen, int *action)
         {
             i = 0;
         }
+        //optimize the game
+
+        if (initMenu == 1)
+        {
+            //SDL_FreeSurface(mainMenuBg);
+
+            if (playTest == playIndex)
+                SDL_FreeSurface(play[playTest]);
+
+            if (settingsTest == settingsIndex)
+                SDL_FreeSurface(settings[settingsTest]);
+
+            if (creditsTest == creditsIndex)
+                SDL_FreeSurface(credits[creditsTest]);
+            if (exitTest == exitIndex)
+                SDL_FreeSurface(exit[exitTest]);
+            if (muteTest == muteIndex)
+                SDL_FreeSurface(mute[muteTest]);
+        }
 
         //blint the images on screen
         SDL_BlitSurface(mainMenuBg, NULL, screen, &pos);
         SDL_BlitSurface(play[playIndex], NULL, screen, &pos);
+
         SDL_BlitSurface(settings[settingsIndex], NULL, screen, &pos);
         SDL_BlitSurface(credits[creditsIndex], NULL, screen, &pos);
         SDL_BlitSurface(exit[exitIndex], NULL, screen, &pos);
         SDL_BlitSurface(mute[muteIndex], NULL, screen, &pos);
 
+        //to optimize the game
+
+        playTest = playIndex;
+        settingsTest = settingsIndex;
+        creditsTest = creditsIndex;
+        exitTest = exitIndex;
+        muteTest = muteIndex;
+        initMenu = 0;
+
         SDL_Flip(screen);
 
-        if (SDL_PollEvent(&event))
+        if (SDL_WaitEvent(&event))
         {
             switch (event.type)
             {
@@ -247,6 +290,10 @@ void mainMenu(SDL_Surface *screen, int *action)
                 case SDLK_m:
                     muteIndex = 1;
                     Mix_PauseMusic();
+                    break;
+                case SDLK_ESCAPE:
+                    (*action) = 0;
+                    done = 0;
                     break;
 
                 case SDLK_UP:
@@ -340,6 +387,7 @@ void mainMenu(SDL_Surface *screen, int *action)
                 case SDLK_RETURN:
                     if (playIndex == 1)
                     {
+                        //SDL_FreeSurface(play[playTest]);
                         SDL_BlitSurface(play[2], NULL, screen, &pos);
                         SDL_Flip(screen);
                         SDL_Delay(100);
@@ -348,6 +396,7 @@ void mainMenu(SDL_Surface *screen, int *action)
                     }
                     else if (settingsIndex == 1)
                     {
+                        //SDL_FreeSurface(settings[settingsTest]);
                         SDL_BlitSurface(settings[2], NULL, screen, &pos);
                         SDL_Flip(screen);
                         SDL_Delay(100);
@@ -356,6 +405,7 @@ void mainMenu(SDL_Surface *screen, int *action)
                     }
                     else if (creditsIndex == 1)
                     {
+                        //SDL_FreeSurface(credits[creditsTest]);
                         SDL_BlitSurface(credits[2], NULL, screen, &pos);
                         SDL_Flip(screen);
                         SDL_Delay(100);
@@ -365,6 +415,7 @@ void mainMenu(SDL_Surface *screen, int *action)
                     }
                     else if (exitIndex == 1)
                     {
+                        //SDL_FreeSurface(exit[exitTest]);
                         SDL_BlitSurface(exit[2], NULL, screen, &pos);
                         SDL_Flip(screen);
                         SDL_Delay(200);
