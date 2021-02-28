@@ -155,6 +155,18 @@ void mainMenu(SDL_Surface *screen, int *action)
     //get the music volume from volume.txt
     getVolume(&musicVol);
 
+    //using text in our game----------------------------------
+    TTF_Init();
+    SDL_Surface *byLunaticsText;
+    TTF_Font *police;
+    police = TTF_OpenFont("Assets/fonts/BelligiaDemoRegular.ttf", 20);
+    SDL_Color white = {255, 255, 255};
+    byLunaticsText = TTF_RenderText_Blended(police, "By Lunatics", white);
+    SDL_Rect textPos;
+    textPos.x = 10;
+    textPos.y = 680;
+    //using text----------------------------------
+
     //declare the main menu bg
     SDL_Surface *mainMenuBg = NULL;
 
@@ -230,6 +242,7 @@ void mainMenu(SDL_Surface *screen, int *action)
         SDL_BlitSurface(credits[creditsIndex], NULL, screen, &pos);
         SDL_BlitSurface(exit[exitIndex], NULL, screen, &pos);
         SDL_BlitSurface(mute[muteIndex], NULL, screen, &pos);
+        SDL_BlitSurface(byLunaticsText, NULL, screen, &textPos);
 
         SDL_Flip(screen);
 
@@ -350,6 +363,8 @@ void mainMenu(SDL_Surface *screen, int *action)
                         SDL_Flip(screen);
                         SDL_Delay(100);
                         (*action) = 1;
+                        //gameMode(screen);
+
                         done = 0;
                     }
                     else if (settingsIndex == 1)
@@ -470,6 +485,7 @@ void mainMenu(SDL_Surface *screen, int *action)
                         SDL_Flip(screen);
                         SDL_Delay(100);
                         (*action) = 1;
+                        //gameMode(screen);
                         done = 0;
                     }
 

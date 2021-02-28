@@ -2,7 +2,7 @@
 
 int main()
 {
-    int action = -1;
+    int action;
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
     SDL_Surface *screen;
@@ -17,21 +17,18 @@ int main()
         switch (action)
         {
         case 1: //player click on play
-            /*
-                gameplay not available yet
-            */
+            gameMode(screen);
+
             break;
 
         case 2: //player click on settings
-            settingsMenu(screen, &action);
+            settingsMenu(screen);
 
             break;
-
-        case 3: //player click on credits
             /*
-                credits cinematics under work
-            */
-            break;
+        case 3: //player click on credits
+            
+            break;*/
         }
     } while (action != 0);
 

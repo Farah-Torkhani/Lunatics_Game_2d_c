@@ -1,7 +1,7 @@
 #include "Headers/headers.h"
 #include "Headers/menu.h"
 
-void settingsMenu(SDL_Surface *screen, int *action)
+void settingsMenu(SDL_Surface *screen)
 {
     //declare simple variables
     int done = 1, volInputIndex = 0, prevVolIndex = 0, nextVolIndex = 0, volBarIndex, resInputIndex = 0, prevResIndex = 0, nextResIndex = 0, resModeIndex = 0;
@@ -144,7 +144,8 @@ void settingsMenu(SDL_Surface *screen, int *action)
                 switch (event.key.keysym.sym)
                 {
                 case SDLK_ESCAPE:
-                    mainMenu(screen, action);
+                    done = 0;
+                    //mainMenu(screen, action);
                     break;
 
                 case SDLK_UP:
@@ -297,7 +298,12 @@ void settingsMenu(SDL_Surface *screen, int *action)
                 case SDLK_RETURN:
                     if (backIndex == 1)
                     {
-                        mainMenu(screen, action);
+                        //mainMenu(screen, action);
+                        done = 0;
+                    }
+                    else if (contInputIndex == 1)
+                    {
+                        controllersScreen(screen);
                     }
                     break;
                 }
@@ -524,6 +530,21 @@ void settingsMenu(SDL_Surface *screen, int *action)
                     }
                     //language input
                     //------------------------------------------------------------------------------
+
+                    //controllers input
+                    if (contInputIndex == 1)
+                    {
+                        controllersScreen(screen);
+                    }
+                    //controllers input
+                    //------------------------------------------------------------------------------
+
+                    //back-----------
+                    if (backIndex == 1)
+                    {
+                        //mainMenu(screen, action);
+                        done = 0;
+                    }
                 }
                 break;
             }
@@ -538,4 +559,135 @@ void saveVolume(int music)
     fichier = fopen("Fichier/volume.txt", "w");
     fprintf(fichier, "%d", music);
     fclose(fichier);
+}
+
+void controllersScreen(SDL_Surface *screen)
+{
+    //declare simple variables
+    int backIndex = 0, done = 1;
+
+    //simple variable hover test
+    int backHover = 1;
+
+    //declare the select game mode images
+    SDL_Surface *controllersBg, *keyboard, *joystick, *table, *back[2];
+
+    //declare and set the postion
+    SDL_Rect pos;
+    pos.x = 0;
+    pos.y = 0;
+
+    //declare and set music
+    Mix_Music *music;
+    music = Mix_LoadMUS("Assets/graphic/MainMenu/ost.mp3");
+
+    //declare and set the hover sound effect
+    Mix_Chunk *hoverSound;
+    hoverSound = Mix_LoadWAV("Assets/graphic/MainMenu/click.wav");
+
+    //set images
+    controllersBg = IMG_Load("Assets/graphic/controllers/controllersBg.jpg");
+
+    keyboard = IMG_Load("Assets/graphic/controllers/keyboard_active.png");
+
+    joystick = IMG_Load("Assets/graphic/controllers/joystick_disable.png");
+
+    table = IMG_Load("Assets/graphic/controllers/table.png");
+
+    back[0] = IMG_Load("Assets/graphic/controllers/back_normal.png");
+    back[1] = IMG_Load("Assets/graphic/controllers/back_hover.png");
+
+    //declare the event var
+    SDL_Event event;
+    while (done)
+    {
+        SDL_BlitSurface(controllersBg, NULL, screen, &pos);
+        SDL_BlitSurface(keyboard, NULL, screen, &pos);
+        SDL_BlitSurface(joystick, NULL, screen, &pos);
+        SDL_BlitSurface(table, NULL, screen, &pos);
+        SDL_BlitSurface(back[backIndex], NULL, screen, &pos);
+
+        SDL_Flip(screen);
+
+        if (SDL_WaitEvent(&event))
+        {
+            switch (event.type)
+            {
+            case SDL_QUIT:
+                done = 0;
+                SDL_Quit();
+                break;
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_ESCAPE:
+                    done = 0;
+
+                    break;
+                case SDLK_UP:
+                    if (backIndex == 0)
+                    {
+                        backIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else
+                    {
+                        backIndex = 0;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    break;
+
+                case SDLK_DOWN:
+                    if (backIndex == 0)
+                    {
+                        backIndex = 1;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    else
+                    {
+                        backIndex = 0;
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    break;
+                case SDLK_RETURN:
+                    if (backIndex == 1)
+                    {
+                        done = 0;
+                    }
+                    break;
+                }
+                break;
+            case SDL_MOUSEMOTION:
+                backIndex = 0;
+
+                if (event.motion.x > 40 && event.motion.y > 480 && event.motion.x < 201 && event.motion.y < 544)
+                {
+                    backIndex = 1;
+                    if (backHover == 1)
+                    {
+                        Mix_PlayChannel(1, hoverSound, 0);
+                    }
+                    backHover = 0;
+                }
+                else
+                {
+                    backHover = 1;
+                }
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    if (backIndex == 1)
+                    {
+                        done = 0;
+                    }
+                }
+                break;
+            }
+        }
+    }
+    SDL_FreeSurface(controllersBg);
+    SDL_FreeSurface(keyboard);
+    SDL_FreeSurface(joystick);
+    SDL_FreeSurface(table);
 }

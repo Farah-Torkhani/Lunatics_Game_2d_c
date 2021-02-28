@@ -8,8 +8,6 @@
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_mixer.h>
 
-void mainMenu(SDL_Surface *screen, int *action);
-int quit(SDL_Surface *ecran);
-void getVolume(int *music);
+void gameMode(SDL_Surface *screen);
 
 #endif
