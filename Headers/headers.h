@@ -7,8 +7,12 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_mixer.h>
+
 #include "menu.h"
 #include "settings.h"
 #include "gameMode.h"
+#include "credits.h"
+#include "selectchamp.h"
+#include "gamedifficulty.h"
 
 #endif

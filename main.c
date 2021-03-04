@@ -25,10 +25,10 @@ int main()
             settingsMenu(screen);
 
             break;
-            /*
+
         case 3: //player click on credits
-            
-            break;*/
+            credits(screen);
+            break;
         }
     } while (action != 0);
 

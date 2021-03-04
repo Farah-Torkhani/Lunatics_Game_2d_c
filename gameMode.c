@@ -1,5 +1,4 @@
 #include "Headers/headers.h"
-#include "Headers/gameMode.h"
 
 void gameMode(SDL_Surface *screen, int *action)
 {
@@ -106,6 +105,12 @@ void gameMode(SDL_Surface *screen, int *action)
                     {
                         done = 0;
                     }
+                    else if (soloIndex == 1)
+                    {
+
+                        gamedifficulty(screen);
+                    }
+
                     break;
                 }
                 break;
@@ -146,6 +151,11 @@ void gameMode(SDL_Surface *screen, int *action)
                     if (backIndex == 1)
                     {
                         done = 0;
+                    }
+                    else if (soloIndex == 1)
+                    {
+
+                        gamedifficulty(screen);
                     }
                 }
                 break;

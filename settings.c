@@ -1,5 +1,4 @@
 #include "Headers/headers.h"
-#include "Headers/menu.h"
 
 void settingsMenu(SDL_Surface *screen)
 {
@@ -102,7 +101,6 @@ void settingsMenu(SDL_Surface *screen)
     while (done)
     {
 
-        //SDL_FillRect(screen, NULL, 0x000000);
         SDL_BlitSurface(settingBG, NULL, screen, &pos);
 
         //blit the volume input images
@@ -298,7 +296,7 @@ void settingsMenu(SDL_Surface *screen)
                 case SDLK_RETURN:
                     if (backIndex == 1)
                     {
-                        //mainMenu(screen, action);
+
                         done = 0;
                     }
                     else if (contInputIndex == 1)
@@ -550,6 +548,45 @@ void settingsMenu(SDL_Surface *screen)
             }
         }
     }
+    SDL_FreeSurface(settingBG);
+    SDL_FreeSurface(volInput[0]);
+    SDL_FreeSurface(volInput[1]);
+
+    SDL_FreeSurface(prevVol[0]);
+    SDL_FreeSurface(prevVol[1]);
+
+    SDL_FreeSurface(nextVol[0]);
+    SDL_FreeSurface(nextVol[1]);
+
+    SDL_FreeSurface(volBar[0]);
+    SDL_FreeSurface(volBar[1]);
+    SDL_FreeSurface(volBar[2]);
+    SDL_FreeSurface(volBar[3]);
+    SDL_FreeSurface(volBar[4]);
+    SDL_FreeSurface(volBar[5]);
+
+    SDL_FreeSurface(prevRes[0]);
+    SDL_FreeSurface(prevRes[1]);
+
+    SDL_FreeSurface(nextRes[0]);
+    SDL_FreeSurface(nextRes[1]);
+
+    SDL_FreeSurface(resMode[0]);
+    SDL_FreeSurface(resMode[1]);
+
+    SDL_FreeSurface(prevLang[0]);
+    SDL_FreeSurface(prevLang[1]);
+
+    SDL_FreeSurface(nextLang[0]);
+    SDL_FreeSurface(nextLang[1]);
+
+    SDL_FreeSurface(langMode[0]);
+    SDL_FreeSurface(langMode[1]);
+
+    SDL_FreeSurface(controllers);
+
+    SDL_FreeSurface(back[0]);
+    SDL_FreeSurface(back[1]);
 }
 
 //save the volume level to the file "volume.txt"

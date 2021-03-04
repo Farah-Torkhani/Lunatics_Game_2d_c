@@ -263,6 +263,11 @@ void mainMenu(SDL_Surface *screen, int *action)
                     muteIndex = 1;
                     Mix_PauseMusic();
                     break;
+                case SDLK_q:
+                    (*action) = 0;
+                    done = 0;
+                    SDL_Quit();
+                    break;
                 case SDLK_p:
                     muteIndex = 0;
                     Mix_ResumeMusic();
