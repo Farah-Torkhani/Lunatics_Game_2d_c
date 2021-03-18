@@ -3,4 +3,6 @@
 
 void gamedifficulty(SDL_Surface *screen);
 
+
+
 #endif

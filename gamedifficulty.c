@@ -1,6 +1,12 @@
 #include "Headers/headers.h"
 #include "Headers/gamedifficulty.h"
 
+
+
+
+
+
+
 void gamedifficulty(SDL_Surface *screen)
 {
     //declare simple variables

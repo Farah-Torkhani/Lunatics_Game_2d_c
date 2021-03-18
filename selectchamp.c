@@ -161,6 +161,12 @@ void selectchamp(SDL_Surface *screen)
                     {
                         done = 0;
                     }
+                    else if (select_right_Index == 1 && select_left_Index == 0 && backIndex == 0)
+                    {
+                      
+                      stage_1(screen);
+
+                    }
                     break;
                 }
                 break;
