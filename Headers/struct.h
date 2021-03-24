@@ -2,6 +2,8 @@
 #define struct_H_INCLUDED
 
 
+
+
 typedef struct
 {
     SDL_Surface *bg;

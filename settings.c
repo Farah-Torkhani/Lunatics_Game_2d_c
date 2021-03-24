@@ -6,13 +6,16 @@ void settingsMenu(SDL_Surface *screen)
     int done = 1, volInputIndex = 0, prevVolIndex = 0, nextVolIndex = 0, volBarIndex, resInputIndex = 0, prevResIndex = 0, nextResIndex = 0, resModeIndex = 0;
     int langInputIndex = 0, prevLangIndex = 0, nextLangIndex = 0, langModeIndex = 0, contInputIndex = 0, backIndex = 0;
     int musicVol;
+    int english;
+     getlanguage(&english);
+   
 
     //simple variable hover test
     int volInputHover = 1, resInputHover = 1, langInputHover = 1, contInputHover = 1, backHover = 1;
 
     //declare the settings images
-    SDL_Surface *settingBG = NULL, *volInput[2], *prevVol[2], *nextVol[2], *volBar[6], *resInput[2], *prevRes[2], *nextRes[2], *resMode[2];
-    SDL_Surface *langInput[2], *prevLang[2], *nextLang[2], *langMode[2], *controllers[2], *back[2];
+    SDL_Surface *settingBG = NULL ,*settingBG_fr = NULL,*resMode_fr[2], *volInput[2], *prevVol[2], *nextVol[2], *volBar[6], *resInput[2] , *resInput_fr[2], *prevRes[2], *nextRes[2], *resMode[2];
+    SDL_Surface *langInput[2],*controllers_fr[2], *langInput_fr[2] ,*retour[2], *prevLang[2], *nextLang[2], *langMode[2], *controllers[2], *back[2];
 
     //declare and set the global position
     SDL_Rect pos;
@@ -44,6 +47,9 @@ void settingsMenu(SDL_Surface *screen)
     //set settings bg
     settingBG = IMG_Load("Assets/graphic/settings/settingsMenuBg.jpg");
 
+//*******set settings bg frensh version*******************************************************
+    settingBG_fr = IMG_Load("Assets/graphic/settings/parametrebg.png");
+
     //set volume input images
     volInput[0] = IMG_Load("Assets/graphic/settings/VolumeInput_normal.png");
     volInput[1] = IMG_Load("Assets/graphic/settings/VolumeInput_hover.png");
@@ -65,6 +71,9 @@ void settingsMenu(SDL_Surface *screen)
     resInput[0] = IMG_Load("Assets/graphic/settings/resInput_normal.png");
     resInput[1] = IMG_Load("Assets/graphic/settings/resInput_hover.png");
 
+    resInput_fr[0] = IMG_Load("Assets/graphic/settings/resolution1.png");
+    resInput_fr[1] = IMG_Load("Assets/graphic/settings/resolution0.png");
+
     prevRes[0] = IMG_Load("Assets/graphic/settings/prevRes_normal.png");
     prevRes[1] = IMG_Load("Assets/graphic/settings/prevRes_hover.png");
 
@@ -74,9 +83,15 @@ void settingsMenu(SDL_Surface *screen)
     resMode[0] = IMG_Load("Assets/graphic/settings/windowed.png");
     resMode[1] = IMG_Load("Assets/graphic/settings/fulScreen.png");
 
+    resMode_fr[0] = IMG_Load("Assets/graphic/settings/fenetre.png");
+    resMode_fr[1] = IMG_Load("Assets/graphic/settings/plein-ecran.png");
+
     //set language input images
     langInput[0] = IMG_Load("Assets/graphic/settings/languageInput_normal.png");
     langInput[1] = IMG_Load("Assets/graphic/settings/languageInput_hover.png");
+
+    langInput_fr[0] = IMG_Load("Assets/graphic/settings/langue0.png");
+    langInput_fr[1] = IMG_Load("Assets/graphic/settings/langue1.png");
 
     prevLang[0] = IMG_Load("Assets/graphic/settings/prevLanguage_normal.png");
     prevLang[1] = IMG_Load("Assets/graphic/settings/prevLanguage_hover.png");
@@ -85,23 +100,38 @@ void settingsMenu(SDL_Surface *screen)
     nextLang[1] = IMG_Load("Assets/graphic/settings/nextLanguage_hover.png");
 
     langMode[0] = IMG_Load("Assets/graphic/settings/english.png");
-    langMode[1] = IMG_Load("Assets/graphic/settings/frensh.png");
+    langMode[1] = IMG_Load("Assets/graphic/settings/francais.png");
 
     //set controllers input images
     controllers[0] = IMG_Load("Assets/graphic/settings/controllers_normal.png");
     controllers[1] = IMG_Load("Assets/graphic/settings/controllers_hover.png");
 
+    //set controllers input images frensh version
+    controllers_fr[0] = IMG_Load("Assets/graphic/settings/controleurs1.png");
+    controllers_fr[1] = IMG_Load("Assets/graphic/settings/controleurs0.png");
+
     //set back images
     back[0] = IMG_Load("Assets/graphic/settings/back_normal.png");
     back[1] = IMG_Load("Assets/graphic/settings/back_hover.png");
+
+    //set back images frensh version
+    retour[0] = IMG_Load("Assets/graphic/settings/retour1.png");
+    retour[1] = IMG_Load("Assets/graphic/settings/retour0.png");
 
     //declare the event
     SDL_Event event;
 
     while (done)
     {
-
-        SDL_BlitSurface(settingBG, NULL, screen, &pos);
+        if(english == 0)
+        {
+            SDL_BlitSurface(settingBG, NULL, screen, &pos);
+        }
+        else if( english == 1 )
+        {
+            SDL_BlitSurface(settingBG_fr, NULL, screen, &pos);
+        }
+        
 
         //blit the volume input images
         SDL_BlitSurface(volInput[volInputIndex], NULL, screen, &pos);
@@ -109,23 +139,46 @@ void settingsMenu(SDL_Surface *screen)
         SDL_BlitSurface(nextVol[nextVolIndex], NULL, screen, &pos);
         SDL_BlitSurface(volBar[volBarIndex], NULL, screen, &pos);
 
-        //blit resolution input images
-        SDL_BlitSurface(resInput[resInputIndex], NULL, screen, &pos);
-        SDL_BlitSurface(prevRes[prevResIndex], NULL, screen, &pos);
-        SDL_BlitSurface(nextRes[nextResIndex], NULL, screen, &pos);
-        SDL_BlitSurface(resMode[resModeIndex], NULL, screen, &pos);
-
-        //blit language input images
+        
+        if(english == 0)
+        {
+              //blit language input images
         SDL_BlitSurface(langInput[langInputIndex], NULL, screen, &pos);
         SDL_BlitSurface(prevLang[prevLangIndex], NULL, screen, &pos);
         SDL_BlitSurface(nextLang[nextLangIndex], NULL, screen, &pos);
-        SDL_BlitSurface(langMode[langModeIndex], NULL, screen, &pos);
-
+        SDL_BlitSurface(langMode[english], NULL, screen, &pos);
+        //blit resolution input images
+        SDL_BlitSurface(resInput[resInputIndex], NULL, screen, &pos);//
+        SDL_BlitSurface(prevRes[prevResIndex], NULL, screen, &pos);
+        SDL_BlitSurface(nextRes[nextResIndex], NULL, screen, &pos);
+        SDL_BlitSurface(resMode[resModeIndex], NULL, screen, &pos);//
+    
         //blit controllers input images
-        SDL_BlitSurface(controllers[contInputIndex], NULL, screen, &pos);
+        SDL_BlitSurface(controllers[contInputIndex], NULL, screen, &pos);//
 
         //blit back images
-        SDL_BlitSurface(back[backIndex], NULL, screen, &pos);
+        SDL_BlitSurface(back[backIndex], NULL, screen, &pos);//
+        }
+        else if(english == 1)//frensh version
+        {
+             
+         //blit language input images
+        SDL_BlitSurface(langInput_fr[langInputIndex], NULL, screen, &pos);
+        SDL_BlitSurface(prevLang[prevLangIndex], NULL, screen, &pos);
+        SDL_BlitSurface(nextLang[nextLangIndex], NULL, screen, &pos);
+        SDL_BlitSurface(langMode[english], NULL, screen, &pos);
+        //blit resolution input images
+        SDL_BlitSurface(resInput_fr[resInputIndex], NULL, screen, &pos);//
+        SDL_BlitSurface(prevRes[prevResIndex], NULL, screen, &pos);
+        SDL_BlitSurface(nextRes[nextResIndex], NULL, screen, &pos);
+        SDL_BlitSurface(resMode_fr[resModeIndex], NULL, screen, &pos);//
+    
+        //blit controllers input images
+        SDL_BlitSurface(controllers_fr[contInputIndex], NULL, screen, &pos);//
+
+        //blit back images
+        SDL_BlitSurface(retour[backIndex], NULL, screen, &pos);//
+        }
 
         SDL_Flip(screen);
 
@@ -247,13 +300,18 @@ void settingsMenu(SDL_Surface *screen)
                     }
                     else if (langInputIndex == 1)
                     {
-                        if (langModeIndex == 0)
+                        if (langModeIndex == 0)//english
                         {
-                            langModeIndex = 1;
+                            langModeIndex = 1;//frensh
+                            english = 1;
+                            savelanguge(english);
+
                         }
                         else
                         {
                             langModeIndex = 0;
+                            english = 0;
+                            savelanguge(english);
                         }
                     }
                     break;
@@ -286,17 +344,20 @@ void settingsMenu(SDL_Surface *screen)
                         if (langModeIndex == 0)
                         {
                             langModeIndex = 1;
+                            english = 1;
+                            savelanguge(english);
                         }
                         else
                         {
                             langModeIndex = 0;
+                            english = 0;
+                            savelanguge(english);
                         }
                     }
                     break;
                 case SDLK_RETURN:
                     if (backIndex == 1)
-                    {
-
+                    {    
                         done = 0;
                     }
                     else if (contInputIndex == 1)
@@ -304,6 +365,7 @@ void settingsMenu(SDL_Surface *screen)
                         controllersScreen(screen);
                     }
                     break;
+                    
                 }
                 break;
 
@@ -597,6 +659,14 @@ void saveVolume(int music)
     fprintf(fichier, "%d", music);
     fclose(fichier);
 }
+//save the language to the file "languge.txt"
+void savelanguge(int english)
+{
+FILE *fichier = NULL;
+    fichier = fopen("Fichier/language.txt", "w");
+    fprintf(fichier, "%d", english);
+    fclose(fichier);
+}
 
 void controllersScreen(SDL_Surface *screen)
 {
@@ -728,3 +798,4 @@ void controllersScreen(SDL_Surface *screen)
     SDL_FreeSurface(joystick);
     SDL_FreeSurface(table);
 }
+

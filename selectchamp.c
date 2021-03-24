@@ -5,12 +5,14 @@ void selectchamp(SDL_Surface *screen)
 {
     //declare simple variables
     int select_right_Index = 0, select_left_Index = 0, backIndex = 0, done = 1;
+    int english;
+     getlanguage(&english);
 
     //simple variable hover test
     int select_right_Hover = 1, select_left_Hover = 1, backHover = 1;
 
     //declare the select champ images
-    SDL_Surface *selectchampBg, *select_right[2], *select_left[2], *back[2];
+    SDL_Surface *selectchampBg ,*selectchampBg_fr, *select_right[2] ,*select_right_fr[2], *select_left[2] ,*select_left_fr[2], *back[2],*back_fr[2];
 
     //declare and set the postion
     SDL_Rect pos;
@@ -27,24 +29,45 @@ void selectchamp(SDL_Surface *screen)
 
     //set images
     selectchampBg = IMG_Load("Assets/graphic/selectchamp/selectchampBg.png");
+    selectchampBg_fr = IMG_Load("Assets/graphic/selectchamp/champbg_fr.png");
 
     select_right[0] = IMG_Load("Assets/graphic/selectchamp/select_right.png");
     select_right[1] = IMG_Load("Assets/graphic/selectchamp/select_right_hover.png");
 
+    select_right_fr[0] = IMG_Load("Assets/graphic/selectchamp/choisird0.png");
+    select_right_fr[1] = IMG_Load("Assets/graphic/selectchamp/choisird1.png");
+
     select_left[0] = IMG_Load("Assets/graphic/selectchamp/select_left.png");
     select_left[1] = IMG_Load("Assets/graphic/selectchamp/select_left_hover.png");
 
+    select_left_fr[0] = IMG_Load("Assets/graphic/selectchamp/choisirg0.png");
+    select_left_fr[1] = IMG_Load("Assets/graphic/selectchamp/choisirg1.png");
+
     back[0] = IMG_Load("Assets/graphic/selectchamp/back.png");
     back[1] = IMG_Load("Assets/graphic/selectchamp/backhover.png");
+
+    back_fr[0] = IMG_Load("Assets/graphic/selectchamp/retour1.png");
+    back_fr[1] = IMG_Load("Assets/graphic/selectchamp/retour0.png");
 
     //declare the event var
     SDL_Event event;
     while (done)
     {
+        if(english == 0)
+        {
         SDL_BlitSurface(selectchampBg, NULL, screen, &pos);
         SDL_BlitSurface(select_right[select_right_Index], NULL, screen, &pos);
         SDL_BlitSurface(select_left[select_left_Index], NULL, screen, &pos);
         SDL_BlitSurface(back[backIndex], NULL, screen, &pos);
+        }
+        else if (english == 1)
+        {
+        SDL_BlitSurface(selectchampBg_fr, NULL, screen, &pos);
+        SDL_BlitSurface(select_right_fr[select_right_Index], NULL, screen, &pos);
+        SDL_BlitSurface(select_left_fr[select_left_Index], NULL, screen, &pos);
+        SDL_BlitSurface(back_fr[backIndex], NULL, screen, &pos);
+        }
+        
 
         SDL_Flip(screen);
 

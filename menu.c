@@ -1,9 +1,13 @@
 #include "Headers/headers.h"
 
+
 int quit(SDL_Surface *ecran)
 {
     //simple variable
     int yesIndex = 0, noIndex = 0, done = 1;
+    int english ;
+    getlanguage(&english);
+   //  L.english = ; //langue : anglais par défaut
 
     //declare and set the position variable
     SDL_Rect pos;
@@ -11,7 +15,7 @@ int quit(SDL_Surface *ecran)
     pos.y = 0;
 
     //declare and set the exit alert images and the background
-    SDL_Surface *exitMenuBg, *exitYes[3], *exitNo[3];
+    SDL_Surface *exitMenuBg, *exitYes[3], *exitNo[3] ;
 
     exitMenuBg = IMG_Load("Assets/graphic/MainMenu/exitBg.jpg");
 
@@ -22,6 +26,19 @@ int quit(SDL_Surface *ecran)
     exitYes[0] = IMG_Load("Assets/graphic/MainMenu/exit-yes0.png");
     exitYes[1] = IMG_Load("Assets/graphic/MainMenu/exit-yes1.png");
     exitYes[2] = IMG_Load("Assets/graphic/MainMenu/exit-yes2.png");
+    //declare and set the exit alert images and the background (frensh version)
+    SDL_Surface *exitMenuBg_frensh, *exitOui[3], *exitNon[3] ;
+
+    exitMenuBg_frensh = IMG_Load("Assets/graphic/MainMenu/quitterbg.png");
+
+    exitNon[0] = IMG_Load("Assets/graphic/MainMenu/non_normal.png");
+    exitNon[1] = IMG_Load("Assets/graphic/MainMenu/non_hover.png");
+    exitNon[2] = IMG_Load("Assets/graphic/MainMenu/non_click.png");
+
+    exitOui[0] = IMG_Load("Assets/graphic/MainMenu/oui_normal.png");
+    exitOui[1] = IMG_Load("Assets/graphic/MainMenu/oui_hover.png");
+    exitOui[2] = IMG_Load("Assets/graphic/MainMenu/oui_click.png");
+    
 
     //declare the event
     SDL_Event event;
@@ -29,10 +46,20 @@ int quit(SDL_Surface *ecran)
     while (done)
     {
         //blint the background and the exit no and yes buttons
+        if(english == 0) //english version
+        {
         SDL_BlitSurface(exitMenuBg, NULL, ecran, &pos);
         SDL_BlitSurface(exitNo[noIndex], NULL, ecran, &pos);
         SDL_BlitSurface(exitYes[yesIndex], NULL, ecran, &pos);
         SDL_Flip(ecran);
+        }
+        else if (english == 1)//frensh version
+        {
+        SDL_BlitSurface(exitMenuBg_frensh, NULL, ecran, &pos);
+        SDL_BlitSurface(exitNon[noIndex], NULL, ecran, &pos);
+        SDL_BlitSurface(exitOui[yesIndex], NULL, ecran, &pos);
+        SDL_Flip(ecran);
+        }
 
         SDL_WaitEvent(&event);
 
@@ -90,20 +117,42 @@ int quit(SDL_Surface *ecran)
             case SDLK_RETURN:
                 if (noIndex == 1)
                 {
+                    if(english == 0)
+                    {
                     SDL_BlitSurface(exitNo[2], NULL, ecran, &pos);
                     SDL_Flip(ecran);
                     SDL_Delay(200);
                     SDL_FreeSurface(exitMenuBg);
                     SDL_FreeSurface(exitNo[noIndex]);
+                    }
+                    else if(english ==1)
+                    {
+                    SDL_BlitSurface(exitNon[2], NULL, ecran, &pos);
+                    SDL_Flip(ecran);
+                    SDL_Delay(200);
+                    SDL_FreeSurface(exitMenuBg_frensh);
+                    SDL_FreeSurface(exitNon[noIndex]);
+                    }
                     return 0;
                 }
                 else if (yesIndex == 1)
                 {
+                    if(english == 0)
+                    {
                     SDL_BlitSurface(exitYes[2], NULL, ecran, &pos);
                     SDL_Flip(ecran);
                     SDL_Delay(200);
                     SDL_FreeSurface(exitMenuBg);
                     SDL_FreeSurface(exitYes[yesIndex]);
+                    }
+                    else if(english == 1 )
+                    {
+                    SDL_BlitSurface(exitOui[2], NULL, ecran, &pos);
+                    SDL_Flip(ecran);
+                    SDL_Delay(200);
+                    SDL_FreeSurface(exitMenuBg_frensh);
+                    SDL_FreeSurface(exitOui[yesIndex]);
+                    }
                     return 1;
                 }
                 break;
@@ -127,41 +176,64 @@ int quit(SDL_Surface *ecran)
 
             if (noIndex == 1)
             {
+                if(english == 0)
+                {
                 SDL_BlitSurface(exitNo[2], NULL, ecran, &pos);
                 SDL_Flip(ecran);
                 SDL_Delay(200);
+                }
+                else if(english == 1)
+                {
+                SDL_BlitSurface(exitNon[2], NULL, ecran, &pos);
+                SDL_Flip(ecran);
+                SDL_Delay(200);
+                }
                 return 0;
             }
 
             else if (yesIndex == 1)
             {
+                if(english == 0)
+                {
                 SDL_BlitSurface(exitYes[2], NULL, ecran, &pos);
                 SDL_Flip(ecran);
                 SDL_Delay(200);
                 SDL_Quit();
+                }
+                else if(english ==1 )
+                {
+                SDL_BlitSurface(exitOui[2], NULL, ecran, &pos);
+                SDL_Flip(ecran);
+                SDL_Delay(200);
+                SDL_Quit();
+                }
                 return 1;
             }
             break;
         }
     }
 }
-
+//-------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------
 void mainMenu(SDL_Surface *screen, int *action)
 {
     //simple variable
     int musicVol;
     int playIndex = 1, settingsIndex = 0, creditsIndex = 0, exitIndex = 0, muteIndex = 0; //declare the index of each button table
+    int english ;
+    getlanguage(&english);
 
     //get the music volume from volume.txt
     getVolume(&musicVol);
 
     //using text in our game----------------------------------
     TTF_Init();
-    SDL_Surface *byLunaticsText;
+    SDL_Surface *byLunaticsText , *parLunaticsText;
     TTF_Font *police;
     police = TTF_OpenFont("Assets/fonts/BelligiaDemoRegular.ttf", 20);
     SDL_Color white = {255, 255, 255};
     byLunaticsText = TTF_RenderText_Blended(police, "By Lunatics", white);
+    parLunaticsText = TTF_RenderText_Blended(police, "Par Lunatics", white);
     SDL_Rect textPos;
     textPos.x = 10;
     textPos.y = 680;
@@ -187,11 +259,30 @@ void mainMenu(SDL_Surface *screen, int *action)
     exit[0] = IMG_Load("Assets/graphic/MainMenu/exit0.png");
     exit[1] = IMG_Load("Assets/graphic/MainMenu/exit1.png");
     exit[2] = IMG_Load("Assets/graphic/MainMenu/exit2.png");
+    
+    //declare and set the main menu buttons frensh version
+    SDL_Surface *jouer[3], *parametre[3], *equipe[3], *quitter[3];
+    jouer[0] = IMG_Load("Assets/graphic/MainMenu/jouer0.png");
+    jouer[1] = IMG_Load("Assets/graphic/MainMenu/jouer1.png");
+    jouer[2] = IMG_Load("Assets/graphic/MainMenu/jouer2.png");
+
+    parametre[0] = IMG_Load("Assets/graphic/MainMenu/parametre0.png");
+    parametre[1] = IMG_Load("Assets/graphic/MainMenu/parametre1.png");
+    parametre[2] = IMG_Load("Assets/graphic/MainMenu/parametre2.png");
+
+    equipe[0] = IMG_Load("Assets/graphic/MainMenu/credit0.png");
+    equipe[1] = IMG_Load("Assets/graphic/MainMenu/credit1.png");
+    equipe[2] = IMG_Load("Assets/graphic/MainMenu/credit2.png");
+
+    quitter[0] = IMG_Load("Assets/graphic/MainMenu/quitter0.png");
+    quitter[1] = IMG_Load("Assets/graphic/MainMenu/quitter1.png");
+    quitter[2] = IMG_Load("Assets/graphic/MainMenu/quitter2.png");
 
     //declare and set the mute button
     SDL_Surface *mute[2];
     mute[0] = IMG_Load("Assets/graphic/MainMenu/musicOn0.png");
     mute[1] = IMG_Load("Assets/graphic/MainMenu/musicOff0.png");
+
 
     //declare position
     SDL_Rect pos;
@@ -235,7 +326,9 @@ void mainMenu(SDL_Surface *screen, int *action)
             i = 0;
         }
 
-        //blint the images on screen
+        //blit the images on screen english version
+        if(english == 0)
+        {
         SDL_BlitSurface(mainMenuBg, NULL, screen, &pos);
         SDL_BlitSurface(play[playIndex], NULL, screen, &pos);
         SDL_BlitSurface(settings[settingsIndex], NULL, screen, &pos);
@@ -243,6 +336,18 @@ void mainMenu(SDL_Surface *screen, int *action)
         SDL_BlitSurface(exit[exitIndex], NULL, screen, &pos);
         SDL_BlitSurface(mute[muteIndex], NULL, screen, &pos);
         SDL_BlitSurface(byLunaticsText, NULL, screen, &textPos);
+        }
+        else if(english == 1)
+        {
+        SDL_BlitSurface(mainMenuBg, NULL, screen, &pos);
+        SDL_BlitSurface(jouer[playIndex], NULL, screen, &pos);
+        SDL_BlitSurface(parametre[settingsIndex], NULL, screen, &pos);
+        SDL_BlitSurface(equipe[creditsIndex], NULL, screen, &pos);
+        SDL_BlitSurface(quitter[exitIndex], NULL, screen, &pos);
+        SDL_BlitSurface(mute[muteIndex], NULL, screen, &pos);
+        SDL_BlitSurface(parLunaticsText, NULL, screen, &textPos);
+        }
+        
 
         SDL_Flip(screen);
 
@@ -364,9 +469,15 @@ void mainMenu(SDL_Surface *screen, int *action)
                 case SDLK_RETURN:
                     if (playIndex == 1)
                     {
-                        SDL_BlitSurface(play[2], NULL, screen, &pos);
+                        if(english == 0 )
+                        {
+                            SDL_BlitSurface(play[2], NULL, screen, &pos);
+                        }else if (english == 1)
+                        {
+                            SDL_BlitSurface(jouer[2], NULL, screen, &pos);
+                        }
                         SDL_Flip(screen);
-                        SDL_Delay(100);
+                        SDL_Delay(16);
                         (*action) = 1;
                         //gameMode(screen);
 
@@ -374,26 +485,46 @@ void mainMenu(SDL_Surface *screen, int *action)
                     }
                     else if (settingsIndex == 1)
                     {
+                        if(english == 0 )
+                        {
                         SDL_BlitSurface(settings[2], NULL, screen, &pos);
+                        }
+                        else if(english == 1)
+                        {
+                            SDL_BlitSurface(parametre[2], NULL, screen, &pos);
+                        }
                         SDL_Flip(screen);
-                        SDL_Delay(100);
+                        SDL_Delay(16);
                         (*action) = 2;
                         done = 0;
                     }
                     else if (creditsIndex == 1)
                     {
-                        SDL_BlitSurface(credits[2], NULL, screen, &pos);
+                        if(english == 0)
+                        {
+                            SDL_BlitSurface(credits[2], NULL, screen, &pos);
+                        }
+                        else if (english == 1)
+                        {
+                            SDL_BlitSurface(equipe[2], NULL, screen, &pos);
+                        }
                         SDL_Flip(screen);
-                        SDL_Delay(100);
+                        SDL_Delay(16);
 
                         (*action) = 3;
                         done = 0;
                     }
                     else if (exitIndex == 1)
                     {
+                        if(english == 0)
+                        {
                         SDL_BlitSurface(exit[2], NULL, screen, &pos);
+                        }else if(english == 1)
+                        {
+                            SDL_BlitSurface(quitter[2], NULL, screen, &pos);
+                        }        
                         SDL_Flip(screen);
-                        SDL_Delay(200);
+                        SDL_Delay(16);
                         if (quit(screen) == 1)
                         {
                             (*action) = 0;
@@ -486,9 +617,15 @@ void mainMenu(SDL_Surface *screen, int *action)
                 {
                     if (playIndex == 1)
                     {
-                        SDL_BlitSurface(play[2], NULL, screen, &pos);
+                        if(english == 0 )
+                        {
+                            SDL_BlitSurface(play[2], NULL, screen, &pos);
+                        }else if (english == 1)
+                        {
+                            SDL_BlitSurface(jouer[2], NULL, screen, &pos);
+                        }
                         SDL_Flip(screen);
-                        SDL_Delay(100);
+                        SDL_Delay(16);
                         (*action) = 1;
                         //gameMode(screen);
                         done = 0;
@@ -496,27 +633,47 @@ void mainMenu(SDL_Surface *screen, int *action)
 
                     else if (settingsIndex == 1)
                     {
+                        if(english == 0 )
+                        {
                         SDL_BlitSurface(settings[2], NULL, screen, &pos);
+                        }
+                        else if(english == 1)
+                        {
+                            SDL_BlitSurface(parametre[2], NULL, screen, &pos);
+                        }
                         SDL_Flip(screen);
-                        SDL_Delay(100);
+                        SDL_Delay(16);
                         (*action) = 2;
                         done = 0;
                     }
 
                     else if (creditsIndex == 1)
                     {
-                        SDL_BlitSurface(credits[2], NULL, screen, &pos);
+                        if(english == 0)
+                        {
+                            SDL_BlitSurface(credits[2], NULL, screen, &pos);
+                        }
+                        else if (english == 1)
+                        {
+                            SDL_BlitSurface(equipe[2], NULL, screen, &pos);
+                        }
                         SDL_Flip(screen);
-                        SDL_Delay(100);
+                        SDL_Delay(16);
                         (*action) = 3;
                         done = 0;
                     }
 
                     else if (exitIndex == 1)
                     {
+                        if(english == 0)
+                        {
                         SDL_BlitSurface(exit[2], NULL, screen, &pos);
+                        }else if(english == 1)
+                        {
+                            SDL_BlitSurface(quitter[2], NULL, screen, &pos);
+                        }
                         SDL_Flip(screen);
-                        SDL_Delay(200);
+                        SDL_Delay(16);
                         if (quit(screen) == 1)
                         {
                             (*action) = 0;
@@ -552,16 +709,31 @@ void mainMenu(SDL_Surface *screen, int *action)
     SDL_FreeSurface(play[0]);
     SDL_FreeSurface(play[1]);
     SDL_FreeSurface(play[2]);
+    
+    SDL_FreeSurface(jouer[0]);
+    SDL_FreeSurface(jouer[1]);
+    SDL_FreeSurface(jouer[2]);
 
     SDL_FreeSurface(settings[0]);
+    SDL_FreeSurface(parametre[0]);
+    SDL_FreeSurface(parametre[1]);
+    SDL_FreeSurface(parametre[2]);
 
     SDL_FreeSurface(credits[0]);
     SDL_FreeSurface(credits[1]);
     SDL_FreeSurface(credits[2]);
 
+    SDL_FreeSurface(equipe[0]);
+    SDL_FreeSurface(equipe[1]);
+    SDL_FreeSurface(equipe[2]);
+    
     SDL_FreeSurface(exit[0]);
     SDL_FreeSurface(exit[1]);
     SDL_FreeSurface(exit[2]);
+
+    SDL_FreeSurface(quitter[0]);
+    SDL_FreeSurface(quitter[1]);
+    SDL_FreeSurface(quitter[2]);
 }
 
 //get the volume level from the file "volume.txt"
@@ -571,5 +743,14 @@ void getVolume(int *music)
     fichier = fopen("Fichier/volume.txt", "r");
     while (!feof(fichier))
         fscanf(fichier, "%d", music);
+    fclose(fichier);
+}
+
+void getlanguage(int *english)
+{
+    FILE *fichier = NULL;
+    fichier = fopen("Fichier/language.txt", "r");
+    while (!feof(fichier))
+        fscanf(fichier, "%d", english);
     fclose(fichier);
 }

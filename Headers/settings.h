@@ -3,6 +3,7 @@
 
 void settingsMenu(SDL_Surface *screen);
 void saveVolume(int music);
+void savelanguge(int english);
 void controllersScreen(SDL_Surface *screen);
 
 #endif
