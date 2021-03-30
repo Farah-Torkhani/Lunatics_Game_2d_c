@@ -214,8 +214,6 @@ afficher_enemie (&f,screen ,relcoord);
 
 void pause(SDL_Surface *screen)
 {
-    int *action=0;
-
      int english,done=1;
      int resInputHover = 0, savInputHover = 0, setInputHover = 0, quiInputHover = 0;
      getlanguage(&english);
@@ -392,7 +390,7 @@ SDL_Flip(screen);
                     }
                      else if(quiInputHover==1)
                     {
-                        mainMenu(screen,&action);
+                        done =0;
                     }
                     break;
                 }
