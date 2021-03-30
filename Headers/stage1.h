@@ -6,6 +6,6 @@
 
 
 void stage_1(SDL_Surface *screen);
-
+void pause(SDL_Surface *screen);
 
  #endif // DS_H_INCLUDED
