@@ -1,7 +1,7 @@
 #include "Headers/headers.h"
 #include "Headers/selectchamp.h"
 
-void selectchamp(SDL_Surface *screen)
+int selectchamp(SDL_Surface *screen)
 {
     //declare simple variables
     int select_right_Index = 0, select_left_Index = 0, backIndex = 0, done = 1;
@@ -186,8 +186,12 @@ void selectchamp(SDL_Surface *screen)
                     }
                     else if (select_right_Index == 1 && select_left_Index == 0 && backIndex == 0)
                     {
-                      
-                      stage_1(screen);
+                      if(stage_1(screen)==1)
+                      {
+                          done=0;
+                          return 1;
+                      }
+                       
 
                     }
                     break;
@@ -253,5 +257,6 @@ void selectchamp(SDL_Surface *screen)
             }
         }
     }
-SDL_FreeSurface(selectchampBg);                
+//SDL_FreeSurface(selectchampBg);         
+return 0;       
 }

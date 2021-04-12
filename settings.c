@@ -358,7 +358,8 @@ void settingsMenu(SDL_Surface *screen)
                 case SDLK_RETURN:
                     if (backIndex == 1)
                     {    
-                        done = 0;
+                       done = 0;
+                       
                     }
                     else if (contInputIndex == 1)
                     {
@@ -505,6 +506,7 @@ void settingsMenu(SDL_Surface *screen)
                 //back button
                 //--------------------------------------------------------------------------
 
+
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_LEFT)
                 {
@@ -603,7 +605,9 @@ void settingsMenu(SDL_Surface *screen)
                     if (backIndex == 1)
                     {
                         //mainMenu(screen, action);
-                        done = 0;
+                        
+                           done = 0;
+                        
                     }
                 }
                 break;

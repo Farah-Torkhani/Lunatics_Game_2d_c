@@ -125,7 +125,10 @@ void gameMode(SDL_Surface *screen, int *action)
                     else if (soloIndex == 1)
                     {
 
-                        gamedifficulty(screen);
+                         if(gamedifficulty(screen)==1)
+                        {
+                            done=0;
+                        }
                     }
 
                     break;
@@ -172,7 +175,10 @@ void gameMode(SDL_Surface *screen, int *action)
                     else if (soloIndex == 1)
                     {
 
-                        gamedifficulty(screen);
+                        if(gamedifficulty(screen)==1)
+                        {
+                            done=0;
+                        }
                     }
                 }
                 break;

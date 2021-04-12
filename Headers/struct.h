@@ -2,6 +2,18 @@
 #define struct_H_INCLUDED
 
 
+typedef struct 
+	{
+	SDL_Rect  pos , reponse_pos , poschoix;
+	
+	SDL_Surface *enigme , *choix;
+	SDL_Surface *reponse,*reponsehover, *reponse1hover, *reponse1, *t , *h;
+
+	char rep[3];
+	
+	}enigme;
+
+
 
 
 typedef struct
@@ -26,22 +38,35 @@ typedef struct
 
 typedef struct Input
 {
- int left,right, left2,right2  ,jump,attack,down;
+ int left, right, left2, right2 , jump, attack, down , e,up,test,save;
 
 } Input;
 
 typedef struct
 {
     SDL_Surface *allMvt;
-    SDL_Rect heroPos , heroPos_relative;
-    SDL_Rect rects[80];
+    SDL_Surface *hpBars[5];
+    SDL_Rect heroPos, heroPos_relative;
+    SDL_Rect rects[100];
+    SDL_Rect hpBarPos;
 
     int frame;
     float xStep, yStep;
     float velocity, speed;
     int currentMode;
+    int hp;
+    int score;
 
 } Hero;
+
+typedef struct 
+	{
+	SDL_Rect  pos , reponse_pos,posechoix;
+	
+	SDL_Surface *enigme[3] ;
+	SDL_Surface *reponse[5] , *reponse1[5] , *t , *h,*choiix;
+	
+	}enigmee;
 
 
  #endif // DS_H_INCLUDED

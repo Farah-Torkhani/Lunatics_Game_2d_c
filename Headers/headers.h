@@ -23,6 +23,9 @@
 #include "input.h"
 #include "enemy.h"
 #include "struct.h"
+#include "enigme_avec_fichier.h"
+#include "enigme_sans_fichier.h"
+
 
 
 

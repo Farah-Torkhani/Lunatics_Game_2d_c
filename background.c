@@ -19,7 +19,7 @@ void initBg(GameplayBg *b)
     //b->camera2.w = 500;
     //b->camera2.h = 720;
 
-    b->bg = IMG_Load("Assets/graphic/stages/backgtest.png");
+    b->bg = IMG_Load("Assets/graphic/stages/backgtest.jpg");
 }
 
 void afficher_background(SDL_Surface *screen, GameplayBg *b)
@@ -31,15 +31,18 @@ void afficher_background(SDL_Surface *screen, GameplayBg *b)
     //SDL_BlitSurface(b->bg, &b->camera2, screen, &test);
 }
 
-void scrolling_right(GameplayBg *b, float velocity, SDL_Surface *screen, Input I, Hero *hero , enemie *e) 
+void scrolling_right(GameplayBg *b, float velocity, SDL_Surface *screen, Input I, Hero *hero , enemie *e , enigme *enigme1,enigmee *enigme2) 
 {
     if (I.right == 1 )
     {
-        if (b->camera.x < 2560 - 1280)
+        if (b->camera.x < 3800 - 1280)
         {
             b->camera.x += velocity;
             hero->heroPos_relative.x+=velocity;
             e->rect.x -= velocity ;
+            enigme1->poschoix.x -= velocity;
+            enigme2->posechoix.x -= velocity;
+
         }
     }
 
@@ -52,7 +55,7 @@ void scrolling_right(GameplayBg *b, float velocity, SDL_Surface *screen, Input I
     }
 }
 
-void scrolling_left(GameplayBg *b, float velocity, SDL_Surface *screen, Input I , Hero *h , enemie *e)
+void scrolling_left(GameplayBg *b, float velocity, SDL_Surface *screen, Input I , Hero *h , enemie *e ,enigme *enigme1,enigmee *enigme2) 
 {
     if (I.left == 1)
     {
@@ -61,6 +64,8 @@ void scrolling_left(GameplayBg *b, float velocity, SDL_Surface *screen, Input I 
             b->camera.x -= velocity;
             h->heroPos_relative.x-=velocity;
             e->rect.x += velocity ;
+             enigme1->poschoix.x += velocity;
+              enigme2->posechoix.x += velocity;
         }
     }
 

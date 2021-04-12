@@ -1,0 +1,5 @@
+Assets/graphic/enigme1/nonormal.png Assets/graphic/enigme1/yesnormal.png 2 Assets/graphic/enigme1/1.png Assets/graphic/enigme1/win.jpg Assets/graphic/enigme1/lose.jpg Assets/graphic/enigme1/noclicked.png Assets/graphic/enigme1/yesclicked.png 
+Assets/graphic/enigme1/nonormal.png Assets/graphic/enigme1/yesnormal.png 1 Assets/graphic/enigme1/2.png Assets/graphic/enigme1/win.jpg Assets/graphic/enigme1/lose.jpg Assets/graphic/enigme1/noclicked.png Assets/graphic/enigme1/yesclicked.png 
+
+
+

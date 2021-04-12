@@ -1,6 +1,6 @@
 #include "Headers/headers.h"
 
-void gamedifficulty(SDL_Surface *screen)
+int gamedifficulty(SDL_Surface *screen)
 {
     //declare simple variables
     int normalIndex = 0, hardIndex = 0, backIndex = 0, done = 1;
@@ -151,12 +151,20 @@ void gamedifficulty(SDL_Surface *screen)
                     else if (normalIndex == 1)
                     {
                       
-                      selectchamp(screen);
+                      if(selectchamp(screen)==1)
+                      {
+                          done=0;
+                          return 1;
+                      }
 
                     }
                     else if (hardIndex == 1)
                     {
-                       selectchamp(screen);
+                       if(selectchamp(screen)==1)
+                      {
+                          done=0;
+                          return 1;
+                      }
                     }
 
                 break;
@@ -220,17 +228,26 @@ void gamedifficulty(SDL_Surface *screen)
                     else if (normalIndex == 1)
                     {
                       
-                      selectchamp(screen);
+                      if(selectchamp(screen)==1)
+                      {
+                          done=0;
+                          return 1;
+                      }
 
                     }
                     else if (hardIndex == 1)
                     {
-                       selectchamp(screen);
+                       if(selectchamp(screen)==1)
+                       {
+                           done=0;
+                           return 1;
+                       }
                     }
                 }
                 break;
             }
         }
     }
-SDL_FreeSurface(gameDifficultyBg);                
+//SDL_FreeSurface(gameDifficultyBg);   
+return 0;             
 }
