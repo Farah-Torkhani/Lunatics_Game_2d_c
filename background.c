@@ -3,7 +3,7 @@
 
 
 void initBg(GameplayBg *b)
-{
+{   
     b->bg = NULL;
     b->BgPos.x = 0;
     b->BgPos.y = 0;

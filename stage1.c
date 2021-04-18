@@ -37,7 +37,8 @@ void stage_1(SDL_Surface *screen)
     initialiser_input(&I);
    
 
-   // getpose(&hero.heroPos.x , &f.rect.x,& b.camera.x , &hero.hp ,&hero.score , &enigme_reponse );
+getpose(&hero.heroPos.x ,&hero.heroPos.y,&f.rect.y, &f.rect.x,& b.camera.x , &hero.hp ,&hero.score , &enigme_reponse );
+
 
 
     SDL_Rect top_bgPos;
@@ -293,7 +294,16 @@ else
 {
 	I.test=0;
 }
-
+if(I.up==1)
+{
+updateHeroScore(&hero, &score, police, white, scoreText, screen);
+}
+else if(I.up==2)
+{
+updateHeroHealth(&hero, direction);
+}
+ savescovie(hero.hp , hero.score );
+ savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_reponse );
         SDL_Flip(screen);
         SDL_Delay(20);
     }
@@ -497,11 +507,32 @@ void savePose(int heropos , int enemypos,int camera ,int vie ,int score ,int eni
 }
 
 //get the pos  from the file "savepos.txt"
-void getpose(int *heropos , int *enemypos,int *camera ,int *vie ,int *score ,int *enigme1)
+void getpose(int *heropos ,int *heroposy,int *recty, int *enemypos,int *camera ,int *vie ,int *score ,int *enigme1)
 {
     FILE *fichier = NULL;
     fichier = fopen("Fichier/savepos.txt", "r");
     while (!feof(fichier))
         fscanf(fichier, "%d %d %d %d %d %d" ,heropos ,enemypos, camera, vie ,score ,enigme1 );
+    fclose(fichier);
+    heroposy=600;
+    recty=600;
+}
+
+//save score and health to the file "savepos.txt"
+void savescovie(int vie ,int score )
+{
+    FILE *fichier = NULL;
+    fichier = fopen("Fichier/save-sco-vie.txt", "w");
+    fprintf(fichier, "%d %d" ,vie ,score );
+    fclose(fichier);
+}
+
+//get the score and health from the file "savepos.txt"
+void getscovie(int *vie ,int *score)
+{
+    FILE *fichier = NULL;
+    fichier = fopen("Fichier/save-sco-vie.txt", "r");
+    while (!feof(fichier))
+    fscanf(fichier, "%d %d" ,vie ,score );
     fclose(fichier);
 }

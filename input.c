@@ -14,4 +14,5 @@ I->jump=0;
 I->attack=0;
 I->test=0;
 I->save=0;
+I->up=0;
 }

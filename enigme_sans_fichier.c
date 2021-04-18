@@ -127,6 +127,8 @@ while(SDL_PollEvent(&event))
                     noIndex = 0;
                     SDL_Delay(700);
                     yesIndex=3;
+                    SDL_Delay(700);
+                    stage_1(screen);
 				}
 
                 else if (yesIndex == 0 && noIndex == 1)
@@ -135,6 +137,8 @@ while(SDL_PollEvent(&event))
                     yesIndex = 0;
                     SDL_Delay(700);
                     noIndex=4;
+                    SDL_Delay(700);
+                    stage_1(screen);
                 }
 
             }
@@ -146,6 +150,8 @@ while(SDL_PollEvent(&event))
                     noIndex = 0;
                     SDL_Delay(700);
                     yesIndex=3;
+                    SDL_Delay(700);
+                    stage_1(screen);
 				}
 
                 else if (yesIndex == 0 && noIndex == 1)
@@ -154,6 +160,8 @@ while(SDL_PollEvent(&event))
                     yesIndex = 0;
                     SDL_Delay(700);
                     noIndex=4;
+                    SDL_Delay(700);
+                    stage_1(screen);
                 }
 
             }
@@ -165,36 +173,32 @@ while(SDL_PollEvent(&event))
                     noIndex = 0;
                     SDL_Delay(700);
                     yesIndex=4;
+                    SDL_Delay(700);
+                    stage_1(screen);
 				}
-
                 else if (yesIndex == 0 && noIndex == 1)
                 {
                     noIndex = 2;
                     yesIndex = 0;
                     SDL_Delay(700);
                     noIndex=3;
+                    SDL_Delay(700);
+                    stage_1(screen);
                 }
-
             }
-				
-                break;
-
-				 
+                break; 
 			}  
 		break;
 	    }
     }
-
-
     SDL_BlitSurface(e->enigme[i],NULL,screen,&e->pos);
     SDL_BlitSurface(e->reponse[noIndex],NULL,screen,&e->reponse_pos);  
     SDL_BlitSurface(e->reponse1[yesIndex],NULL,screen,&e->reponse_pos);
-      
-SDL_Flip(screen);
-SDL_Delay(16); 
+    SDL_Flip(screen);
+    SDL_Delay(16); 
 } 
-
 }
+
 
 //-----------------------------------Fonction generer enigme-------------------------------------------
 int genererEnigmee(enigmee *e ,SDL_Surface * screen )

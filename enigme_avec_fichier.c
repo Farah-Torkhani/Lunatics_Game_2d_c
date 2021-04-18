@@ -103,7 +103,7 @@ void afficherEnigme(enigme *e )
     SDL_Color white = {0, 0, 0};
    sprintf(scoreText, "Score: %d", hero.score);
 
-
+  
    //declare the event
 	SDL_Event event;
 
@@ -130,8 +130,9 @@ while(SDL_PollEvent(&event))
                      SDL_Delay(200);  
                      I.up=1;
                       
-                       updateHeroScore(&hero, &score, police, white, scoreText, screen); 
-savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_reponse );
+                       updateHeroScore(&hero, &hero.score, police, white, scoreText, screen); 
+                       
+
                         stage_1(screen) ;            
                             }
                 else
@@ -140,8 +141,9 @@ savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_re
                     SDL_BlitSurface(e->reponse1hover,NULL,screen,&e->reponse_pos);
                      SDL_Flip(screen);
                      SDL_Delay(200); 
-                  updateHeroHealth(&hero, direction);
-savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_reponse );
+                  //updateHeroHealth(&hero, direction);
+                  I.up=2;
+//savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_reponse );
                      stage_1(screen) ;   
                  
                 }
@@ -158,8 +160,9 @@ savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_re
                      SDL_Delay(200); 
                      I.up=1;
                   
-              updateHeroScore(&hero, &score, police, white, scoreText, screen);
-savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_reponse );
+             // updateHeroScore(&hero, &hero.score, police, white, scoreText, screen);
+
+//savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_reponse );
                  stage_1(screen) ;
               
                 }
@@ -168,9 +171,9 @@ savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_re
                      SDL_BlitSurface(e->reponse1hover,NULL,screen,&e->reponse_pos);
                      SDL_Flip(screen);
                      SDL_Delay(200); 
-
-                  updateHeroHealth(&hero, direction);
-savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_reponse );
+I.up=2;
+                  //updateHeroHealth(&hero, direction);
+//savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_reponse );
                  stage_1(screen) ;
                 }
                
@@ -188,6 +191,8 @@ savePose(hero.heroPos.x , f.rect.x, b.camera.x , hero.hp ,hero.score , enigme_re
 			}
 		break;
 	    }
+     
+       
     }
 
      SDL_BlitSurface(e->enigme,NULL,screen,&e->pos);
