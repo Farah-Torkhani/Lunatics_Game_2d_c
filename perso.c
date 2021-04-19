@@ -4,8 +4,8 @@ int frameNb = 10;
 
 void init_hero(Hero *h)
 {
-
     h->allMvt = IMG_Load("Assets/graphic/hero/test.png");
+
     h->hpBars[0] = IMG_Load("Assets/graphic/hero/hp_bars/hp_0.png");
     h->hpBars[1] = IMG_Load("Assets/graphic/hero/hp_bars/hp_1.png");
     h->hpBars[2] = IMG_Load("Assets/graphic/hero/hp_bars/hp_2.png");
@@ -22,6 +22,9 @@ void init_hero(Hero *h)
 
     h->hpBarPos.x = 0;
     h->hpBarPos.y = 0;
+
+    h->scoreImgPos.x = 1050;
+    h->scoreImgPos.y = 30;
 
     h->velocity = 0;
     h->speed = 5;
@@ -200,14 +203,10 @@ void setrects(SDL_Rect *crop)
     }
 }
 
-void afficher_Hero(Hero *h, SDL_Surface *screen, SDL_Surface *topBg, SDL_Surface *score)
+void afficher_Hero(Hero *h, SDL_Surface *screen)
 {
-    SDL_Rect test;
-    test.x = 1050;
-    test.y = 30;
-    //SDL_BlitSurface(topBg, NULL, screen, &h->hpBarPos);
     SDL_BlitSurface(h->hpBars[h->hp], NULL, screen, &h->hpBarPos);
-    SDL_BlitSurface(score, NULL, screen, &test);
+    SDL_BlitSurface(h->scoreImg, NULL, screen, &h->scoreImgPos);
     SDL_BlitSurface(h->allMvt, &h->rects[h->frame], screen, &h->heroPos);
 }
 
@@ -298,7 +297,7 @@ void walkAnimation(Hero *h)
     }
 }
 
-void jumpAnimation(Hero *h, SDL_Surface *screen, SDL_Surface *bg, SDL_Rect bgPos, int run, Input I)
+void jumpAnimation(Hero *h, SDL_Surface *screen, GameplayBg *b, enemie f, int run, Input I)
 {
     int i;
     if (h->currentMode == 4 && I.jump == 1)
@@ -317,13 +316,24 @@ void jumpAnimation(Hero *h, SDL_Surface *screen, SDL_Surface *bg, SDL_Rect bgPos
             }
             if (run == 1)
             {
-                if (h->heroPos.x < 1700)
+                if (h->heroPos_relative.x < 2500)
                 {
-                    h->heroPos.x += 40;
+                    //h->heroPos.x += 40;
+                    h->heroPos_relative.x += 20;
+                    b->camera.x += 20;
+                }
+                else
+                {
+                    if (h->heroPos.x < 1000)
+                        h->heroPos.x += 20;
                 }
             }
-            SDL_BlitSurface(bg, NULL, screen, &bgPos);
-            SDL_BlitSurface(h->allMvt, &h->rects[h->frame], screen, &h->heroPos);
+            afficher_background(screen, b);
+            afficher_Hero(h, screen);
+
+            update_ennemi(&f, screen, h->hpBarPos, *b);
+            afficher_enemie(&f, screen, f.rect);
+
             SDL_Flip(screen);
             SDL_Delay(20);
         }
@@ -345,17 +355,26 @@ void jumpAnimation(Hero *h, SDL_Surface *screen, SDL_Surface *bg, SDL_Rect bgPos
 
             if (run == 1)
             {
-                h->heroPos.x -= 40;
+                //h->heroPos.x -= 20;
+                if (h->heroPos_relative.x > 100)
+                {
+                    h->heroPos_relative.x -= 20;
+                    b->camera.x -= 20;
+                }
             }
-            SDL_BlitSurface(bg, NULL, screen, &bgPos);
-            SDL_BlitSurface(h->allMvt, &h->rects[h->frame], screen, &h->heroPos);
+            afficher_background(screen, b);
+            afficher_Hero(h, screen);
+
+            update_ennemi(&f, screen, h->hpBarPos, *b);
+            afficher_enemie(&f, screen, f.rect);
+
             SDL_Flip(screen);
             SDL_Delay(20);
         }
     }
 }
 
-void attackAnimation(Hero *h, SDL_Surface *screen, SDL_Surface *bg, SDL_Rect bgPos, Input I)
+void attackAnimation(Hero *h, SDL_Surface *screen, GameplayBg *b, enemie f, Input I)
 {
     int i;
 
@@ -365,8 +384,12 @@ void attackAnimation(Hero *h, SDL_Surface *screen, SDL_Surface *bg, SDL_Rect bgP
         {
             h->frame = i;
 
-            SDL_BlitSurface(bg, NULL, screen, &bgPos);
-            SDL_BlitSurface(h->allMvt, &h->rects[h->frame], screen, &h->heroPos);
+            afficher_background(screen, b);
+            afficher_Hero(h, screen);
+
+            update_ennemi(&f, screen, h->hpBarPos, *b);
+            afficher_enemie(&f, screen, f.rect);
+
             SDL_Flip(screen);
             SDL_Delay(15);
         }
@@ -377,8 +400,12 @@ void attackAnimation(Hero *h, SDL_Surface *screen, SDL_Surface *bg, SDL_Rect bgP
         {
             h->frame = i;
 
-            SDL_BlitSurface(bg, NULL, screen, &bgPos);
-            SDL_BlitSurface(h->allMvt, &h->rects[h->frame], screen, &h->heroPos);
+            afficher_background(screen, b);
+            afficher_Hero(h, screen);
+
+            update_ennemi(&f, screen, h->hpBarPos, *b);
+            afficher_enemie(&f, screen, f.rect);
+
             SDL_Flip(screen);
             SDL_Delay(15);
         }
@@ -414,7 +441,7 @@ void jumpHeroMvt(Hero *hero, Input I, int *run)
         }
     }
 }
-
+/*
 void leftAndRightHeroMvtR(Hero *hero, Input I, Uint32 dt)
 {
     if (hero->currentMode == 2 || hero->currentMode == 3)
@@ -476,8 +503,73 @@ void leftAndRightHeroMvtR(Hero *hero, Input I, Uint32 dt)
         //hero->velocity = 0;
     }
 }
+*/
 
-void deadAnimation(Hero *h, SDL_Surface *screen, SDL_Surface *bg, SDL_Rect bgPos)
+void leftAndRightHeroMvtR(Hero *hero, Input I, Uint32 dt)
+{
+    if (hero->currentMode == 2 || hero->currentMode == 3)
+    {
+        if (I.right == 1 && (hero->heroPos.x <= 360 || (hero->heroPos_relative.x >= 2500 && hero->heroPos.x <= 1000)))
+        //if (hero->heroPos.x <= 360)
+        {
+            if (I.right == 1)
+            {
+                hero->xStep = 0.5 * hero->velocity * 2 * 2 + hero->speed * 2;
+
+                hero->heroPos.x += hero->xStep;
+
+                if (hero->velocity < 8)
+                {
+                    hero->velocity += 0.5;
+                }
+            }
+        }
+        if (I.left == 1 && hero->heroPos.x > 70)
+        {
+            hero->xStep = 0.5 * hero->velocity * 2 * 2 + hero->speed * 2;
+            hero->heroPos.x -= hero->xStep;
+            if (hero->velocity < 8)
+            {
+                hero->velocity += 0.5;
+            }
+        }
+    }
+    else if (hero->currentMode == 6 || hero->currentMode == 7)
+    {
+        if (I.right == 1 && (hero->heroPos.x <= 360 || (hero->heroPos_relative.x >= 2500 && hero->heroPos.x <= 1000)))
+        //if (hero->heroPos.x <= 360)
+        {
+
+            if (I.right == 1)
+            {
+                hero->xStep = 0.5 * hero->velocity * 1 * 1 + hero->speed * 1;
+
+                hero->heroPos.x += hero->xStep;
+
+                if (hero->velocity < 8)
+                {
+                    hero->velocity += 0.5;
+                }
+            }
+        }
+        if (I.left == 1 && hero->heroPos.x > 50)
+        {
+            hero->xStep = 0.5 * hero->velocity * 1 * 1 + hero->speed * 1;
+            hero->heroPos.x -= hero->xStep;
+            if (hero->velocity < 8)
+            {
+                hero->velocity += 0.5;
+            }
+        }
+    }
+
+    if (I.right == 0 && I.left == 0)
+    {
+        //hero->velocity = 0;
+    }
+}
+
+void deadAnimation(Hero *h, SDL_Surface *screen, GameplayBg *b, enemie f)
 {
     int i;
 
@@ -487,8 +579,10 @@ void deadAnimation(Hero *h, SDL_Surface *screen, SDL_Surface *bg, SDL_Rect bgPos
         {
             h->frame = i;
 
-            SDL_BlitSurface(bg, NULL, screen, &bgPos);
-            SDL_BlitSurface(h->allMvt, &h->rects[h->frame], screen, &h->heroPos);
+            afficher_background(screen, b);
+            afficher_Hero(h, screen);
+            afficher_enemie(&f, screen, f.rect);
+
             SDL_Flip(screen);
             SDL_Delay(15);
         }
@@ -500,8 +594,10 @@ void deadAnimation(Hero *h, SDL_Surface *screen, SDL_Surface *bg, SDL_Rect bgPos
         {
             h->frame = i;
 
-            SDL_BlitSurface(bg, NULL, screen, &bgPos);
-            SDL_BlitSurface(h->allMvt, &h->rects[h->frame], screen, &h->heroPos);
+            afficher_background(screen, b);
+            afficher_Hero(h, screen);
+            afficher_enemie(&f, screen, f.rect);
+
             SDL_Flip(screen);
             SDL_Delay(15);
         }
@@ -528,13 +624,10 @@ void updateHeroHealth(Hero *h, char *direction)
     }
 }
 
-void updateHeroScore(Hero *h, SDL_Surface **score, TTF_Font *police, SDL_Color color, char *scoreText, SDL_Surface *screen)
+void updateHeroScore(Hero *h, TTF_Font *police, SDL_Color color, char *scoreText, SDL_Surface *screen)
 {
-    SDL_Rect test;
-    test.x = 1700;
-    test.y = 30;
     h->score = h->score + 10;
     sprintf(scoreText, "Score: %d", h->score);
-    *score = TTF_RenderText_Blended(police, scoreText, color);
+    h->scoreImg = TTF_RenderText_Blended(police, scoreText, color);
 }
 //--
