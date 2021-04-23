@@ -17,7 +17,7 @@ void initBg(GameplayBg *b)
     //b->camera2.w = 500;
     //b->camera2.h = 720;
 
-    b->bg = IMG_Load("Assets/graphic/stages/backgtest.jpg");
+    b->bg = IMG_Load("Assets/graphic/stages/bg1.jpg");
 }
 
 void afficher_background(SDL_Surface *screen, GameplayBg *b)
@@ -33,7 +33,7 @@ void scrolling_right(GameplayBg *b, float velocity, SDL_Surface *screen, Input I
 {
     if (I.right == 1)
     {
-        if (b->camera.x < 3800 - 1280)
+        if (b->camera.x < 10000 - 1280)
         {
             b->camera.x += velocity;
             hero->heroPos_relative.x += velocity;

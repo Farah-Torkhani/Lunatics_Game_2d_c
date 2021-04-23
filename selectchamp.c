@@ -186,11 +186,13 @@ int selectchamp(SDL_Surface *screen)
                     }
                     else if (select_right_Index == 1 && select_left_Index == 0 && backIndex == 0)
                     {
+                        /*
                       if(stage_1(screen)==1)
                       {
                           done=0;
                           return 1;
-                      }
+                      }*/
+                      stage_1(screen , 0);
                        
 
                     }

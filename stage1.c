@@ -1,6 +1,6 @@
 #include "Headers/headers.h"
 
-void stage_1(SDL_Surface *screen)
+void stage_1(SDL_Surface *screen , int newORload)
 {
     //declare simple variables
     int done = 1, run = 0, test_velocity = 10;
@@ -27,7 +27,7 @@ void stage_1(SDL_Surface *screen)
     int next;
     int i = 0;
     int act = 1;
-    int enigme_reponse = 0;
+    int enigme_reponse = 0 , enigme2_reponse = 0;
 
     initBg(&b);
     init_hero(&hero);
@@ -35,8 +35,23 @@ void stage_1(SDL_Surface *screen)
     Init_enigmee(&enigme_sans_fichier);
     inisialiser_enemie(&f);
     initialiser_input(&I);
+    if(newORload == 1)
+    {
+        charger(&hero.heroPos.x ,&hero.heroPos.y, &f.rect.x, &f.rect.y ,&hero.hp ,&hero.score  ,&b.camera.x ,&hero.heroPos_relative.x  , &enigme_avec_fichier.poschoix.x ,&enigme_avec_fichier.poschoix.y , "Fichier/savepos.txt" , &enigme_reponse , &enigme2_reponse);
+    }
+    if(newORload == 2)
+    {
+        charger(&hero.heroPos.x ,&hero.heroPos.y, &f.rect.x, &f.rect.y ,&hero.hp ,&hero.score  ,&b.camera.x ,&hero.heroPos_relative.x  , &enigme_avec_fichier.poschoix.x ,&enigme_avec_fichier.poschoix.y , "Fichier/savepos2.txt" , &enigme_reponse , &enigme2_reponse);
+    }
+/*
+//-----------------------------------------
+    if(enigme2_reponse == 0)
+    {
+        SDL_BlitSurface(e->enigme[i],NULL,screen,&e->pos);
+    }
+//--------------------------------------------
+  */  
 
-    //getpose(&hero.heroPos.x, &hero.heroPos.y, &f.rect.y, &f.rect.x, &b.camera.x, &hero.hp, &hero.score, &enigme_reponse);
 
     TTF_Init();
     TTF_Font *police;
@@ -74,6 +89,8 @@ void stage_1(SDL_Surface *screen)
                 {
                 case SDLK_ESCAPE:
                     //done = 0;
+                    sauvegarder(hero.heroPos.x, hero.heroPos.y , f.rect.x ,f.rect.y, hero.hp , hero.score  , b.camera.x , hero.heroPos_relative.x , enigme_avec_fichier.poschoix.x,enigme_avec_fichier.poschoix.y , "Fichier/savepos2.txt" , enigme_reponse , enigme2_reponse);
+
                     pause(screen);
                     break;
 
@@ -120,10 +137,12 @@ void stage_1(SDL_Surface *screen)
 
                 case SDLK_p:
                     updateHeroHealth(&hero, direction);
+                   GameOver(screen);
                     break;
 
                 case SDLK_o:
                     updateHeroScore(&hero, police, white, scoreText, screen);
+                     
                     break;
                 case SDLK_e:
                     I.e = 1;
@@ -242,12 +261,14 @@ void stage_1(SDL_Surface *screen)
         afficher_enemie(&f, screen, relcoord);
 
         //afficher enigme 1
-        if (hero.heroPos.x > 1000 - b.camera.x && hero.heroPos.x <= 1500 - b.camera.x && enigme_reponse == 0)
+        if (hero.heroPos.x > 2180 - b.camera.x && hero.heroPos.x <= 2680 - b.camera.x && enigme_reponse == 0)
         {
             SDL_BlitSurface(enigme_avec_fichier.choix, NULL, screen, &enigme_avec_fichier.poschoix);
         }
-        if (hero.heroPos.x > 1000 - b.camera.x && hero.heroPos.x <= 1500 - b.camera.x && I.e == 1 && enigme_reponse == 0)
+        if (hero.heroPos.x > 2180 - b.camera.x && hero.heroPos.x <= 2680 - b.camera.x && I.e == 1 && enigme_reponse == 0)
         {
+            enigme_reponse = 1;
+            sauvegarder(hero.heroPos.x, hero.heroPos.y , f.rect.x ,f.rect.y, hero.hp , hero.score  , b.camera.x , hero.heroPos_relative.x , enigme_avec_fichier.poschoix.x,enigme_avec_fichier.poschoix.y , "Fichier/savepos.txt" , enigme_reponse , enigme2_reponse);
 
             afficherEnigme(&enigme_avec_fichier);
         }
@@ -255,259 +276,25 @@ void stage_1(SDL_Surface *screen)
         {
             I.e = 0;
         }
-        //afficher enigme 2
-        if (hero.heroPos.x > 2000 - b.camera.x && hero.heroPos.x <= 2500 - b.camera.x && enigme_reponse == 0)
+   /*     //afficher enigme 2
+        if (hero.heroPos.x > 2180 - b.camera.x && hero.heroPos.x <= 2680 - b.camera.x && enigme2_reponse == 0)
         {
             SDL_BlitSurface(enigme_sans_fichier.choiix, NULL, screen, &enigme_sans_fichier.posechoix);
         }
-        if (hero.heroPos.x > 2000 - b.camera.x && hero.heroPos.x <= 2500 - b.camera.x && I.test == 1 && enigme_reponse == 0)
+        if (hero.heroPos.x > 2180 - b.camera.x && hero.heroPos.x <= 2680 - b.camera.x && I.e == 1 && enigme_reponse == 0)
         {
-            //  savePose(hero.heroPos , f.rect, b.camera , hero.hp ,hero.score , enigme_reponse );
+        //    savePose2(hero.heroPos.x, hero.heroPos.y , f.rect.x ,f.rect.y, hero.hp , hero.score  , b.camera.x , hero.heroPos_relative.x , enigme_avec_fichier.poschoix.x,enigme_avec_fichier.poschoix.y );
+          sauvegarder(hero.heroPos.x, hero.heroPos.y , f.rect.x ,f.rect.y, hero.hp , hero.score  , b.camera.x , hero.heroPos_relative.x , enigme_avec_fichier.poschoix.x,enigme_avec_fichier.poschoix.y , "Fichier/savepos.txt" , enigme_reponse , enigme2_reponse);
+
             afficherEnigmee(&enigme_sans_fichier);
         }
         else
         {
-            I.test = 0;
+            I.e = 0;
         }
-        if (I.up == 1)
-        {
-            //updateHeroScore(&hero, &score, police, white, scoreText, screen);
-            //updateHeroScore(&hero, police, white, scoreText, screen);
-        }
-        else if (I.up == 2)
-        {
-            //updateHeroHealth(&hero, direction);
-        }
-        //savescovie(hero.hp, hero.score);
-        //savePose(hero.heroPos.x, f.rect.x, b.camera.x, hero.hp, hero.score, enigme_reponse);
+    
+*/    
         SDL_Flip(screen);
         SDL_Delay(20);
     }
 }
-
-void pause(SDL_Surface *screen)
-{
-    int english, done = 1;
-    int resInputHover = 0, savInputHover = 0, setInputHover = 0, quiInputHover = 0;
-    getlanguage(&english);
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-
-    screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
-
-    SDL_WM_SetCaption("Lunatics", NULL); //window title
-
-    //initialise audio
-    Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024);
-
-    //declare and set music
-    Mix_Music *music;
-    music = Mix_LoadMUS("Assets/graphic/MainMenu/ost.mp3");
-
-    //declare and set the hover sound effect
-    Mix_Chunk *hoverSound;
-    hoverSound = Mix_LoadWAV("Assets/graphic/settings/click.wav");
-
-    //get the music volume from the file
-    /* getVolume(&musicVol);
-
-    volBarIndex = musicVol / 20;*/
-
-    //set the music volume andplay it
-    //  Mix_VolumeMusic(musicVol);
-    Mix_PlayMusic(music, -1);
-
-    hoverSound = Mix_LoadWAV("Assets/graphic/settings/click.wav");
-
-    SDL_Surface *BACKGROUND, *RESUMER_b[2], *SAVE_b[2], *SETTINGS_b[2], *QUITE_b[2];
-    SDL_Surface *BACKGROUND_FR, *RESUMER_b_FR[2], *SAVE_b_FR[2], *SETTINGS_b_FR[2], *QUITE_b_FR[2];
-    BACKGROUND = IMG_Load("Assets/graphic/stages/bg.jpg");
-    RESUMER_b[0] = IMG_Load("Assets/graphic/stages/resume0.png");
-    RESUMER_b[1] = IMG_Load("Assets/graphic/stages/resume1.png");
-    SAVE_b[0] = IMG_Load("Assets/graphic/stages/save0.png");
-    SAVE_b[1] = IMG_Load("Assets/graphic/stages/save1.png");
-    SETTINGS_b[0] = IMG_Load("Assets/graphic/stages/settings0.png");
-    SETTINGS_b[1] = IMG_Load("Assets/graphic/stages/settings1.png");
-    QUITE_b[0] = IMG_Load("Assets/graphic/stages/exit0.png");
-    QUITE_b[1] = IMG_Load("Assets/graphic/stages/exit1.png");
-
-    BACKGROUND_FR = IMG_Load("Assets/graphic/stages/bg.jpg");
-    RESUMER_b_FR[0] = IMG_Load("Assets/graphic/stages/resumefr0.png");
-    RESUMER_b_FR[1] = IMG_Load("Assets/graphic/stages/resumefr1.png");
-    SAVE_b_FR[0] = IMG_Load("Assets/graphic/stages/savefr0.png");
-    SAVE_b_FR[1] = IMG_Load("Assets/graphic/stages/savefr1.png");
-    SETTINGS_b_FR[0] = IMG_Load("Assets/graphic/stages/parametre0.png");
-    SETTINGS_b_FR[1] = IMG_Load("Assets/graphic/stages/parametre1.png");
-    QUITE_b_FR[0] = IMG_Load("Assets/graphic/stages/quitter0.png");
-    QUITE_b_FR[1] = IMG_Load("Assets/graphic/stages/quitter1.png");
-
-    SDL_Rect pos;
-
-    pos.x = 0;
-    pos.y = 0;
-    SDL_Event event;
-
-    while (done)
-    {
-        if (english == 0)
-        {
-            SDL_BlitSurface(BACKGROUND, NULL, screen, &pos);
-            SDL_BlitSurface(RESUMER_b[resInputHover], NULL, screen, &pos);
-            SDL_BlitSurface(SAVE_b[savInputHover], NULL, screen, &pos);
-            SDL_BlitSurface(SETTINGS_b[setInputHover], NULL, screen, &pos);
-            SDL_BlitSurface(QUITE_b[quiInputHover], NULL, screen, &pos);
-        }
-        else if (english == 1)
-        {
-            SDL_BlitSurface(BACKGROUND_FR, NULL, screen, &pos);
-            SDL_BlitSurface(RESUMER_b_FR[resInputHover], NULL, screen, &pos);
-            SDL_BlitSurface(SAVE_b_FR[savInputHover], NULL, screen, &pos);
-            SDL_BlitSurface(SETTINGS_b_FR[setInputHover], NULL, screen, &pos);
-            SDL_BlitSurface(QUITE_b_FR[quiInputHover], NULL, screen, &pos);
-        }
-        SDL_Flip(screen);
-
-        if (SDL_WaitEvent(&event))
-        {
-            switch (event.type)
-            {
-            case SDL_QUIT:
-                done = 0;
-                SDL_Quit();
-                break;
-
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_ESCAPE:
-                    done = 0;
-                    break;
-
-                case SDLK_UP:
-                    if (resInputHover == 0 && savInputHover == 0 && setInputHover == 0 && quiInputHover == 0)
-                    {
-                        resInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-                    else if (resInputHover == 1 && savInputHover == 0 && setInputHover == 0 && quiInputHover == 0)
-                    {
-                        resInputHover = 0;
-                        quiInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-                    else if (resInputHover == 0 && savInputHover == 0 && setInputHover == 0 && quiInputHover == 1)
-                    {
-                        quiInputHover = 0;
-                        savInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-                    else if (resInputHover == 0 && savInputHover == 1 && setInputHover == 0 && quiInputHover == 0)
-                    {
-                        savInputHover = 0;
-                        setInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-                    else if (resInputHover == 0 && savInputHover == 0 && setInputHover == 1 && quiInputHover == 0)
-                    {
-                        setInputHover = 0;
-                        resInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-
-                    break;
-
-                case SDLK_DOWN:
-                    if (resInputHover == 0 && savInputHover == 0 && setInputHover == 0 && quiInputHover == 0)
-                    {
-                        resInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-                    else if (resInputHover == 1 && savInputHover == 0 && setInputHover == 0 && quiInputHover == 0)
-                    {
-                        resInputHover = 0;
-                        setInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-                    else if (resInputHover == 0 && savInputHover == 0 && setInputHover == 1 && quiInputHover == 0)
-                    {
-                        setInputHover = 0;
-                        savInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-                    else if (resInputHover == 0 && savInputHover == 1 && setInputHover == 0 && quiInputHover == 0)
-                    {
-                        savInputHover = 0;
-                        quiInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-                    else if (resInputHover == 0 && savInputHover == 0 && setInputHover == 0 && quiInputHover == 1)
-                    {
-                        quiInputHover = 0;
-                        resInputHover = 1;
-                        Mix_PlayChannel(1, hoverSound, 0);
-                    }
-
-                    break;
-                case SDLK_RETURN:
-                    if (resInputHover == 1)
-                    {
-                        stage_1(screen);
-                    }
-                    else if (setInputHover == 1)
-                    {
-                        settingsMenu(screen);
-                    }
-                    else if (quiInputHover == 1)
-                    {
-                        done = 0;
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    SDL_FreeSurface(screen);
-    SDL_Quit();
-}
-
-/*
-//save the pose  to the file "savepos.txt"
-void savePose(int heropos, int enemypos, int camera, int vie, int score, int enigme1)
-{
-    FILE *fichier = NULL;
-    fichier = fopen("Fichier/savepos.txt", "w");
-    fprintf(fichier, "%d %d %d %d %d %d", heropos, enemypos, camera, vie, score, enigme1);
-    fclose(fichier);
-}
-
-//get the pos  from the file "savepos.txt"
-void getpose(int *heropos, int *heroposy, int *recty, int *enemypos, int *camera, int *vie, int *score, int *enigme1)
-{
-    FILE *fichier = NULL;
-    fichier = fopen("Fichier/savepos.txt", "r");
-    while (!feof(fichier))
-        fscanf(fichier, "%d %d %d %d %d %d", heropos, enemypos, camera, vie, score, enigme1);
-    fclose(fichier);
-    *heroposy = 400;
-    *recty = 600;
-}
-
-//save score and health to the file "savepos.txt"
-void savescovie(int vie, int score)
-{
-    FILE *fichier = NULL;
-    fichier = fopen("Fichier/save-sco-vie.txt", "w");
-    fprintf(fichier, "%d %d", vie, score);
-    fclose(fichier);
-}
-
-//get the score and health from the file "savepos.txt"
-void getscovie(int *vie, int *score)
-{
-    FILE *fichier = NULL;
-    fichier = fopen("Fichier/save-sco-vie.txt", "r");
-    while (!feof(fichier))
-        fscanf(fichier, "%d %d", vie, score);
-    fclose(fichier);
-}
-*/

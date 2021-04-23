@@ -478,7 +478,8 @@ void mainMenu(SDL_Surface *screen, int *action)
                         }
                         SDL_Flip(screen);
                         SDL_Delay(16);
-                        (*action) = 1;
+                       newORloadGame(screen);
+                       // (*action) = 1;
                         //gameMode(screen);
 
                         done = 0;

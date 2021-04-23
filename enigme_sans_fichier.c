@@ -33,7 +33,7 @@ g->reponse_pos.y = 0;
 g->t=IMG_Load("Assets/graphic/win.jpg");
 g->h = IMG_Load("Assets/graphic/lose.jpg");
 
-g->posechoix.x = 2080 ;
+g->posechoix.x = 2180 ;
 g->posechoix.y = 400;
 g->choiix= IMG_Load("Assets/graphic/enigme1/selectE.png");
   
@@ -128,7 +128,7 @@ while(SDL_PollEvent(&event))
                     SDL_Delay(700);
                     yesIndex=3;
                     SDL_Delay(700);
-                    stage_1(screen);
+                    stage_1(screen ,1);
 				}
 
                 else if (yesIndex == 0 && noIndex == 1)
@@ -138,7 +138,7 @@ while(SDL_PollEvent(&event))
                     SDL_Delay(700);
                     noIndex=4;
                     SDL_Delay(700);
-                    stage_1(screen);
+                    stage_1(screen ,1);
                 }
 
             }
@@ -151,7 +151,7 @@ while(SDL_PollEvent(&event))
                     SDL_Delay(700);
                     yesIndex=3;
                     SDL_Delay(700);
-                    stage_1(screen);
+                    stage_1(screen ,1);
 				}
 
                 else if (yesIndex == 0 && noIndex == 1)
@@ -161,7 +161,7 @@ while(SDL_PollEvent(&event))
                     SDL_Delay(700);
                     noIndex=4;
                     SDL_Delay(700);
-                    stage_1(screen);
+                    stage_1(screen ,1);
                 }
 
             }
@@ -174,7 +174,7 @@ while(SDL_PollEvent(&event))
                     SDL_Delay(700);
                     yesIndex=4;
                     SDL_Delay(700);
-                    stage_1(screen);
+                    stage_1(screen ,1);
 				}
                 else if (yesIndex == 0 && noIndex == 1)
                 {
@@ -183,7 +183,7 @@ while(SDL_PollEvent(&event))
                     SDL_Delay(700);
                     noIndex=3;
                     SDL_Delay(700);
-                    stage_1(screen);
+                    stage_1(screen ,1);
                 }
             }
                 break; 
@@ -208,3 +208,4 @@ srand(time(NULL));
 i=(rand()%3);
  return i ;
 }
+
