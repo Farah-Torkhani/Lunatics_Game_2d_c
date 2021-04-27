@@ -316,7 +316,7 @@ void jumpAnimation(Hero *h, SDL_Surface *screen, GameplayBg *b, enemie f, int ru
             }
             if (run == 1)
             {
-                if (h->heroPos_relative.x < 2500)
+                if (h->heroPos_relative.x < 9500)
                 {
                     //h->heroPos.x += 40;
                     h->heroPos_relative.x += 20;
@@ -509,7 +509,7 @@ void leftAndRightHeroMvtR(Hero *hero, Input I, Uint32 dt)
 {
     if (hero->currentMode == 2 || hero->currentMode == 3)
     {
-        if (I.right == 1 && (hero->heroPos.x <= 360 || (hero->heroPos_relative.x >= 2500 && hero->heroPos.x <= 1000)))
+        if (I.right == 1 && (hero->heroPos.x <= 360 || (hero->heroPos_relative.x >= 9500 && hero->heroPos.x <= 1000)))
         //if (hero->heroPos.x <= 360)
         {
             if (I.right == 1)
@@ -536,7 +536,7 @@ void leftAndRightHeroMvtR(Hero *hero, Input I, Uint32 dt)
     }
     else if (hero->currentMode == 6 || hero->currentMode == 7)
     {
-        if (I.right == 1 && (hero->heroPos.x <= 360 || (hero->heroPos_relative.x >= 2500 && hero->heroPos.x <= 1000)))
+        if (I.right == 1 && (hero->heroPos.x <= 360 || (hero->heroPos_relative.x >= 9500 && hero->heroPos.x <= 1000)))
         //if (hero->heroPos.x <= 360)
         {
 

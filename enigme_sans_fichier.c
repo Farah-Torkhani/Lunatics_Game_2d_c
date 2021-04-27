@@ -33,7 +33,7 @@ g->reponse_pos.y = 0;
 g->t=IMG_Load("Assets/graphic/win.jpg");
 g->h = IMG_Load("Assets/graphic/lose.jpg");
 
-g->posechoix.x = 2180 ;
+g->posechoix.x = 5300 ;
 g->posechoix.y = 400;
 g->choiix= IMG_Load("Assets/graphic/enigme1/selectE.png");
   

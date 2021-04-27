@@ -2,6 +2,12 @@
 
 void GameOver(SDL_Surface *screen)
 {
+    enemie f;
+    enigme enigme_avec_fichier;
+     enigmee enigme_sans_fichier;
+    Hero hero;
+    GameplayBg b;
+
     //declare simple variables
     int TryAgain = 0, menu = 0, done = 1;
     int english;
@@ -27,14 +33,14 @@ void GameOver(SDL_Surface *screen)
     hoverSound = Mix_LoadWAV("Assets/graphic/MainMenu/click.wav");
 
     //set images
-    gameoverBg = IMG_Load("Assets/graphic/gameover/gameover.jpg");
-    gameoverBg_fr = IMG_Load("Assets/graphic/gameover/gameover.jpg");
+    gameoverBg = IMG_Load("Assets/graphic/gameover/gameover.png");
+    gameoverBg_fr = IMG_Load("Assets/graphic/gameover/gameoverfr.png");
 
     tryagain[0] = IMG_Load("Assets/graphic/gameover/tryagain.png");
     tryagain[1] = IMG_Load("Assets/graphic/gameover/tryagainhover.png");
 
     tryagain_fr[0] = IMG_Load("Assets/graphic/gameover/resessayer.png");
-    tryagain_fr[1] = IMG_Load("Assets/graphic/gameover/tryagainhover.png");
+    tryagain_fr[1] = IMG_Load("Assets/graphic/gameover/reessayerhover.png");
 
     load[0] = IMG_Load("Assets/graphic/gameover/menu.png");
     load[1] = IMG_Load("Assets/graphic/gameover/menuhover.png");
@@ -121,7 +127,7 @@ void GameOver(SDL_Surface *screen)
                 case SDLK_RETURN:
                      if (TryAgain == 1)
                     {
-                       stage_1(screen , 1);
+                       stage_1(screen , 0);
                     }
                     else if (menu == 1)
                     {
@@ -171,7 +177,8 @@ void GameOver(SDL_Surface *screen)
                 {
                   if (TryAgain == 1)
                     {
-                       stage_1(screen , 1);
+                    
+                       stage_1(screen , 0);
                     }
                     else if (menu == 1)
                     {

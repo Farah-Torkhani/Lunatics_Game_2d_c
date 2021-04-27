@@ -78,7 +78,7 @@ void afficherEnigme(enigme *e )
      
 
     SDL_Surface * screen, *score;;
-    Hero hero;
+    
     char direction[50];
     char scoreText[100];
     screen = SDL_SetVideoMode(1280, 720, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
@@ -86,20 +86,22 @@ void afficherEnigme(enigme *e )
 
    //declare simple variables
     bool running=true;
-	int i,enigme_reponse=0;
+	int i,enigme_reponse=0,enigme2_reponse=0;
     GameplayBg b;
     enemie f;
+    Hero hero;
+     enigme enigme_avec_fichier;
+    enigmee enigme_sans_fichier;
+
   
     //-------
 
      Input I;
-     I.up=0;
-  I.save=1;
     //----------
   
       TTF_Init();
     TTF_Font *police;
-    police = police = TTF_OpenFont("Assets/fonts/DelaGothicOne-Regular.ttf", 25);
+    police =  TTF_OpenFont("Assets/fonts/DelaGothicOne-Regular.ttf", 25);
     SDL_Color white = {0, 0, 0};
    sprintf(scoreText, "Score: %d", hero.score);
 
@@ -129,7 +131,10 @@ while(SDL_PollEvent(&event))
                     SDL_Flip(screen);
                      SDL_Delay(200);  
                       
-                     //  updateHeroScore(&hero, &hero.score, police, white, scoreText, screen); 
+                         charger(&hero.heroPos.x ,&hero.heroPos.y, &f.rect.x, &f.rect.y ,&hero.hp ,&hero.score  ,&b.camera.x ,&hero.heroPos_relative.x  , &enigme_avec_fichier.poschoix.x ,&enigme_avec_fichier.poschoix.y , "Fichier/savepos.txt" , &enigme_reponse , &enigme2_reponse ,&enigme_sans_fichier.posechoix.x , &enigme_sans_fichier.posechoix.y);
+                    updateHeroScore(&hero, police, white, scoreText, screen);
+                    sauvegarder(hero.heroPos.x, hero.heroPos.y , f.rect.x ,f.rect.y, hero.hp , hero.score  , b.camera.x , hero.heroPos_relative.x , enigme_avec_fichier.poschoix.x,enigme_avec_fichier.poschoix.y , "Fichier/savepos.txt" , enigme_reponse , enigme2_reponse ,enigme_sans_fichier.posechoix.x , enigme_sans_fichier.posechoix.y);
+ 
                         stage_1(screen , 1) ;            
                 }
                 else
@@ -137,7 +142,9 @@ while(SDL_PollEvent(&event))
                     SDL_BlitSurface(e->reponse1hover,NULL,screen,&e->reponse_pos);
                      SDL_Flip(screen);
                      SDL_Delay(200); 
-                  //updateHeroHealth(&hero, direction);
+
+                     
+                //  updateHeroHealth(&hero, direction);
                     stage_1(screen , 1) ;   
                  
                 }
@@ -209,6 +216,7 @@ void pause(SDL_Surface *screen)
 {
     enemie f;
     enigme enigme_avec_fichier;
+     enigmee enigme_sans_fichier;
     Hero hero;
     GameplayBg b;
 
@@ -387,7 +395,7 @@ void pause(SDL_Surface *screen)
                     }
                     else if ( savInputHover ==1)
                     {
-                        getPose2(&hero.heroPos.x ,&hero.heroPos.y, &f.rect.x, &f.rect.y ,&hero.hp ,&hero.score  ,&b.camera.x ,&hero.heroPos_relative.x  , &enigme_avec_fichier.poschoix.x ,&enigme_avec_fichier.poschoix.y , &enigme_reponse , &enigme2_reponse);
+                        getPose2(&hero.heroPos.x ,&hero.heroPos.y, &f.rect.x, &f.rect.y ,&hero.hp ,&hero.score  ,&b.camera.x ,&hero.heroPos_relative.x  , &enigme_avec_fichier.poschoix.x ,&enigme_avec_fichier.poschoix.y , &enigme_reponse , &enigme2_reponse ,&enigme_sans_fichier.posechoix.x , &enigme_sans_fichier.posechoix.y);
                     }
                     else if (quiInputHover == 1)
                     {
@@ -405,22 +413,22 @@ void pause(SDL_Surface *screen)
 
 
 //save the pose  to the file "savepos.txt"
-void sauvegarder(int heropos,int heroposy ,int enemypos,int enemyposy ,int vie ,int score  ,int camera , int heropos1  , int enigme ,int enigmey  , char *nomfichier , int enigme_reponse , int enigme2_reponse)
+void sauvegarder(int heropos,int heroposy ,int enemypos,int enemyposy ,int vie ,int score  ,int camera , int heropos1  , int enigme ,int enigmey  , char *nomfichier , int enigme_reponse , int enigme2_reponse ,int enigme2x , int enigme2y)
 {
     FILE *fichier = NULL;
     fichier = fopen(nomfichier, "w");
-    fprintf(fichier, "%d %d %d %d %d %d %d %d %d %d %d %d" ,heropos,heroposy ,enemypos,enemyposy, vie ,score  ,camera , heropos1  ,enigme, enigmey ,enigme_reponse ,enigme2_reponse);
+    fprintf(fichier, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d" ,heropos,heroposy ,enemypos,enemyposy, vie ,score  ,camera , heropos1  ,enigme, enigmey ,enigme_reponse ,enigme2_reponse ,  enigme2x , enigme2y);
     fclose(fichier);
 }
 
 //get the pos  from the file "savepos.txt"
-void charger(int *heropos,int *heroposy , int *enemypos ,int *enemyposy,int *vie ,int *score  ,int *camera , int *heropos1  , int *enigme ,int *enigmey , char *nomfichier , int *enigme_reponse , int *enigme2_reponse)
+void charger(int *heropos,int *heroposy , int *enemypos ,int *enemyposy,int *vie ,int *score  ,int *camera , int *heropos1  , int *enigme ,int *enigmey , char *nomfichier , int *enigme_reponse , int *enigme2_reponse ,int *enigme2x , int *enigme2y)
 {
     FILE *fichier = NULL;
     fichier = fopen(nomfichier, "r");
     while (!feof(fichier))
     {
-    fscanf(fichier, "%d %d %d %d %d %d %d %d %d %d %d %d" ,heropos,heroposy ,enemypos, enemyposy, vie ,score  ,camera ,heropos1  ,enigme, enigmey , enigme_reponse, enigme2_reponse);
+    fscanf(fichier, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d" ,heropos,heroposy ,enemypos, enemyposy, vie ,score  ,camera ,heropos1  ,enigme, enigmey , enigme_reponse, enigme2_reponse ,enigme2x ,enigme2y);
     //fscanf(fichier,"%d",heropos->x);
     }
     fclose(fichier);
@@ -428,7 +436,7 @@ void charger(int *heropos,int *heroposy , int *enemypos ,int *enemyposy,int *vie
 
 
 //sauvegarder les données de fichier savepos2.txt dans le fichier savepos.txt
-void getPose2(int *heropos,int *heroposy , int *enemypos ,int *enemyposy,int *vie ,int *score  ,int *camera , int *heropos1  , int *enigme ,int *enigmey , int *enigme_reponse , int *enigme2_reponse )
+void getPose2(int *heropos,int *heroposy , int *enemypos ,int *enemyposy,int *vie ,int *score  ,int *camera , int *heropos1  , int *enigme ,int *enigmey , int *enigme_reponse , int *enigme2_reponse ,int *enigme2x , int *enigme2y)
 {
     FILE *fichier = NULL;
     fichier = fopen("Fichier/savepos2.txt", "r");
@@ -438,8 +446,8 @@ void getPose2(int *heropos,int *heroposy , int *enemypos ,int *enemyposy,int *vi
 
     while ( (!feof(fichier)) && (!feof(fichier1)) )
     {
-    fscanf(fichier  , "%d %d %d %d %d %d %d %d %d %d %d %d" ,heropos,heroposy ,enemypos, enemyposy, vie ,score  ,camera ,heropos1  ,enigme, enigmey ,enigme_reponse,enigme2_reponse);
-    fprintf(fichier1, "%d %d %d %d %d %d %d %d %d %d %d %d" ,*heropos,*heroposy ,*enemypos,*enemyposy, *vie ,*score  ,*camera , *heropos1  ,*enigme, *enigmey ,enigme_reponse , enigme2_reponse);
+    fscanf(fichier  , "%d %d %d %d %d %d %d %d %d %d %d %d %d %d" ,heropos,heroposy ,enemypos, enemyposy, vie ,score  ,camera ,heropos1  ,enigme, enigmey ,enigme_reponse,enigme2_reponse , enigme2x , enigme2y);
+    fprintf(fichier1, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d" ,*heropos,*heroposy ,*enemypos,*enemyposy, *vie ,*score  ,*camera , *heropos1  ,*enigme, *enigmey ,*enigme_reponse , *enigme2_reponse , *enigme2x , *enigme2y);
     }
     fclose(fichier);
     fclose(fichier1);
