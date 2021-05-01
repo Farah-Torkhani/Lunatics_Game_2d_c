@@ -210,7 +210,7 @@ i=(rand()%2);
  return i ;
 }
 
-
+//------------------------------------------Pause------------------------------------------------------------------
 
 void pause(SDL_Surface *screen)
 {
@@ -395,7 +395,8 @@ void pause(SDL_Surface *screen)
                     }
                     else if ( savInputHover ==1)
                     {
-                        getPose2(&hero.heroPos.x ,&hero.heroPos.y, &f.rect.x, &f.rect.y ,&hero.hp ,&hero.score  ,&b.camera.x ,&hero.heroPos_relative.x  , &enigme_avec_fichier.poschoix.x ,&enigme_avec_fichier.poschoix.y , &enigme_reponse , &enigme2_reponse ,&enigme_sans_fichier.posechoix.x , &enigme_sans_fichier.posechoix.y);
+                        Save(screen);
+//                        getPose2(&hero.heroPos.x ,&hero.heroPos.y, &f.rect.x, &f.rect.y ,&hero.hp ,&hero.score  ,&b.camera.x ,&hero.heroPos_relative.x  , &enigme_avec_fichier.poschoix.x ,&enigme_avec_fichier.poschoix.y , &enigme_reponse , &enigme2_reponse ,&enigme_sans_fichier.posechoix.x , &enigme_sans_fichier.posechoix.y);
                     }
                     else if (quiInputHover == 1)
                     {
@@ -410,8 +411,235 @@ void pause(SDL_Surface *screen)
     SDL_FreeSurface(screen);
     SDL_Quit();
 }
+//-------------------------------------------------Save--------------------------------------------------------------------
+
+void Save(SDL_Surface *screen)
+{
+    enemie f;
+    enigme enigme_avec_fichier;
+     enigmee enigme_sans_fichier;
+    Hero hero;
+    GameplayBg b;
+    int enigme_reponse , enigme2_reponse;
 
 
+    //simple variable
+    int yesIndex = 0, noIndex = 0, done = 1;
+    int english ;
+    getlanguage(&english);
+   //  L.english = ; //langue : anglais par défaut
+
+    //declare and set the position variable
+    SDL_Rect pos;
+    pos.x = 0;
+    pos.y = 0;
+
+    //declare and set the save alert images and the background
+    SDL_Surface *saveMenuBg, *saveYes[3], *saveNo[3] ;
+
+    saveMenuBg = IMG_Load("Assets/graphic/save/save.png");
+
+    saveNo[0] = IMG_Load("Assets/graphic/save/no2.png");
+    saveNo[1] = IMG_Load("Assets/graphic/save/no1.png");
+    saveNo[2] = IMG_Load("Assets/graphic/save/no0.png");
+
+    saveYes[0] = IMG_Load("Assets/graphic/save/yes2.png");
+    saveYes[1] = IMG_Load("Assets/graphic/save/yes1.png");
+    saveYes[2] = IMG_Load("Assets/graphic/save/yes0.png");
+    //declare and set the save alert images and the background (frensh version)
+    SDL_Surface *saveMenuBg_frensh, *saveYes_fr[3], *saveNon[3] ;
+
+    saveMenuBg_frensh = IMG_Load("Assets/graphic/save/savefr.png");
+
+    saveNon[0] = IMG_Load("Assets/graphic/save/non2.png");
+    saveNon[1] = IMG_Load("Assets/graphic/save/non1.png");
+    saveNon[2] = IMG_Load("Assets/graphic/save/non0.png");
+
+    saveYes_fr[0] = IMG_Load("Assets/graphic/save/oui2.png");
+    saveYes_fr[1] = IMG_Load("Assets/graphic/save/oui0.png");
+    saveYes_fr[2] = IMG_Load("Assets/graphic/save/oui1.png");
+    
+
+    //declare the event
+    SDL_Event event;
+
+    while (done)
+    {
+        //blint the background and the exit no and yes buttons
+        if(english == 0) //english version
+        {
+        SDL_BlitSurface(saveMenuBg, NULL, screen, &pos);
+        SDL_BlitSurface(saveNo[noIndex], NULL, screen, &pos);
+        SDL_BlitSurface(saveYes[yesIndex], NULL, screen, &pos);
+        SDL_Flip(screen);
+        }
+        else if (english == 1)//frensh version
+        {
+        SDL_BlitSurface(saveMenuBg_frensh, NULL, screen, &pos);
+        SDL_BlitSurface(saveNon[noIndex], NULL, screen, &pos);
+        SDL_BlitSurface(saveYes_fr[yesIndex], NULL, screen, &pos);
+        SDL_Flip(screen);
+        }
+
+        SDL_WaitEvent(&event);
+
+        switch (event.type)
+        {
+
+        case SDL_QUIT:
+            return 1;
+
+        case SDL_KEYDOWN:
+
+            switch (event.key.keysym.sym)
+            {
+            case SDLK_LEFT:
+                if (yesIndex == 0 && noIndex == 0)
+                {
+                    yesIndex = 0;
+                    noIndex = 1;
+                }
+
+                else if (yesIndex == 0 && noIndex == 1)
+                {
+                    yesIndex = 1;
+                    noIndex = 0;
+                }
+
+                else if (yesIndex == 1 && noIndex == 0)
+                {
+                    yesIndex = 0;
+                    noIndex = 1;
+                }
+                break;
+
+            case SDLK_RIGHT:
+
+                if (yesIndex == 0 && noIndex == 0)
+                {
+                    yesIndex = 0;
+                    noIndex = 1;
+                }
+
+                else if (yesIndex == 0 && noIndex == 1)
+                {
+                    yesIndex = 1;
+                    noIndex = 0;
+                }
+
+                else if (yesIndex == 1 && noIndex == 0)
+                {
+                    yesIndex = 0;
+                    noIndex = 1;
+                }
+                break;
+
+            case SDLK_RETURN:
+                if (noIndex == 1)
+                {
+                    if(english == 0)
+                    {
+                    SDL_BlitSurface(saveNo[2], NULL, screen, &pos);
+                    SDL_Flip(screen);
+                    SDL_Delay(200);
+                    SDL_FreeSurface(saveMenuBg);
+                    SDL_FreeSurface(saveNo[noIndex]);
+                    }
+                    else if(english ==1)
+                    {
+                    SDL_BlitSurface(saveNon[2], NULL, screen, &pos);
+                    SDL_Flip(screen);
+                    SDL_Delay(200);
+                    SDL_FreeSurface(saveMenuBg_frensh);
+                    SDL_FreeSurface(saveNon[noIndex]);
+                    }
+                   pause(screen);
+                }
+                else if (yesIndex == 1)
+                {
+                    if(english == 0)
+                    {
+                    SDL_BlitSurface(saveYes[2], NULL, screen, &pos);
+                    SDL_Flip(screen);
+                    SDL_Delay(200);
+                    SDL_FreeSurface(saveMenuBg);
+                    SDL_FreeSurface(saveYes[yesIndex]);
+                    }
+                    else if(english == 1 )
+                    {
+                    SDL_BlitSurface(saveYes_fr[2], NULL, screen, &pos);
+                    SDL_Flip(screen);
+                    SDL_Delay(200);
+                    SDL_FreeSurface(saveMenuBg_frensh);
+                    SDL_FreeSurface(saveYes_fr[yesIndex]);
+                    }
+
+                 getPose2(&hero.heroPos.x ,&hero.heroPos.y, &f.rect.x, &f.rect.y ,&hero.hp ,&hero.score  ,&b.camera.x ,&hero.heroPos_relative.x  , &enigme_avec_fichier.poschoix.x ,&enigme_avec_fichier.poschoix.y , &enigme_reponse , &enigme2_reponse ,&enigme_sans_fichier.posechoix.x , &enigme_sans_fichier.posechoix.y);
+                pause(screen);
+                }
+                break;
+            }
+            break;
+
+        case SDL_MOUSEMOTION:
+            yesIndex = 0;
+            noIndex = 0;
+            if (event.motion.x > 648 && event.motion.y > 437 && event.motion.x < 788 && event.motion.y < 495)
+            {
+                noIndex = 1;
+            }
+            else if (event.motion.x > 492 && event.motion.y > 437 && event.motion.x < 632 && event.motion.y < 495)
+            {
+                yesIndex = 1;
+            }
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+
+            if (noIndex == 1)
+            {
+                if(english == 0)
+                {
+                SDL_BlitSurface(saveNo[2], NULL, screen, &pos);
+                SDL_Flip(screen);
+                SDL_Delay(200);
+                }
+                else if(english == 1)
+                {
+                SDL_BlitSurface(saveNon[2], NULL, screen, &pos);
+                SDL_Flip(screen);
+                SDL_Delay(200);
+                }
+                pause(screen);
+            }
+
+            else if (yesIndex == 1)
+            {
+                if(english == 0)
+                {
+                SDL_BlitSurface(saveYes[2], NULL, screen, &pos);
+                SDL_Flip(screen);
+                SDL_Delay(200);
+                }
+                else if(english ==1 )
+                {
+                SDL_BlitSurface(saveYes_fr[2], NULL, screen, &pos);
+                SDL_Flip(screen);
+                SDL_Delay(200);
+                         }
+                getPose2(&hero.heroPos.x ,&hero.heroPos.y, &f.rect.x, &f.rect.y ,&hero.hp ,&hero.score  ,&b.camera.x ,&hero.heroPos_relative.x  , &enigme_avec_fichier.poschoix.x ,&enigme_avec_fichier.poschoix.y , &enigme_reponse , &enigme2_reponse ,&enigme_sans_fichier.posechoix.x , &enigme_sans_fichier.posechoix.y);
+            pause(screen);
+            }
+            break;
+        }
+    }
+
+
+}
+
+
+
+//----------------------------------------------------------------------------------------------
 //save the pose  to the file "savepos.txt"
 void sauvegarder(int heropos,int heroposy ,int enemypos,int enemyposy ,int vie ,int score  ,int camera , int heropos1  , int enigme ,int enigmey  , char *nomfichier , int enigme_reponse , int enigme2_reponse ,int enigme2x , int enigme2y)
 {

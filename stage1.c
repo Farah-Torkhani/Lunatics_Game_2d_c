@@ -2,6 +2,9 @@
 
 void stage_1(SDL_Surface *screen , int newORload)
 {
+    char Player1_Jump[10] , Player1_MouveR[10] , Player1_MouveL[10] , Player1_Run[10] , Player1_Attack[10];
+    char Player2_Jump[10] , Player2_MouveR[10] , Player2_MouveL[10] , Player2_Run[10] , Player2_Attack[10];
+
     int attack = 0;
     //declare simple variables
     int done = 1, run = 0, test_velocity = 10;
@@ -53,6 +56,9 @@ void stage_1(SDL_Surface *screen , int newORload)
 //--------------------------------------------
   */  
 
+  getInput(&Player1_Jump, &Player1_MouveR , &Player1_MouveL , &Player1_Run , &Player1_Attack , "Fichier/SaveInput.txt");
+  //getInput(&Player2_Jump, &Player2_MouveR , &Player2_MouveL , &Player2_Run , &Player2_Attack , "Fichier/SaveInput2.txt");
+
 
     TTF_Init();
     TTF_Font *police;
@@ -94,6 +100,62 @@ void stage_1(SDL_Surface *screen , int newORload)
 
                     pause(screen);
                     break;
+
+                    case SDLK_a:
+                    /*if(strcmp(Player1_Jump,"a")==0)
+                    {
+                        I.right = 1;
+                    //hero.currentMode = 2;
+                    hero.currentMode = 6;
+
+                    }*/
+                    
+                    if(strcmp(Player1_Jump,"a")==0)
+                    {
+                        I.jump = 1;
+                    }
+                    else if(strcmp(Player1_MouveR,"a")==0)
+                    {
+                        I.right = 1;
+                    //hero.currentMode = 2;
+                    hero.currentMode = 6;
+                    }
+                    else if(strcmp(Player1_MouveL,"a")==0)
+                    {
+                        I.left = 1;
+                    hero.currentMode = 7;
+                    //hero.currentMode = 3;
+                    }
+                    else if(strcmp(Player1_Run,"a")==0)
+                    {
+                        test_velocity = 20;
+                    if (hero.currentMode == 6)
+                    {
+                        hero.currentMode = 2;
+                    }
+                    else if (hero.currentMode == 7)
+                    {
+                        hero.currentMode = 3;
+                    }
+                    }
+                    else if(strcmp(Player1_Attack,"a")==0)
+                    {
+                           //I.jump = 0;
+                    I.attack = 1;
+                    if (strcmp(direction, "right") == 0)
+                    {
+                        hero.currentMode = 4;
+                    }
+                    else
+                    {
+                        hero.currentMode = 5;
+                    }
+                    attack = 1;
+                 
+                    }
+
+                    break;
+
 
                 case SDLK_SPACE:
                     I.jump = 1;
@@ -173,6 +235,75 @@ void stage_1(SDL_Surface *screen , int newORload)
             case SDL_KEYUP:
                 switch (event.key.keysym.sym)
                 {
+                    case SDLK_a:
+                    /*if(strcmp(Player1_Jump ,"a")==0)
+                    {
+                        I.right = 0;
+                    hero.currentMode = 0;
+                    run = 0;
+                    }*/
+                  if(strcmp(Player1_Jump,"a")==0)
+                    {
+                        I.jump = 0;
+                    if (I.right == 1)
+                    {
+                        hero.currentMode = 6;
+                    }
+                    else if (I.left == 1)
+                    {
+                        hero.currentMode = 7;
+                    }
+                    else
+                    {
+                        if (strcmp(direction, "right") == 0)
+                        {
+                            hero.currentMode = 0;
+                        }
+                        else
+                        {
+                            hero.currentMode = 1;
+                        }
+                    }
+
+                    }
+                    else if(strcmp(Player1_MouveR,"a")==0)
+                    {
+                        I.right = 0;
+                    hero.currentMode = 0;
+                    run = 0;
+                    }
+                    else if(strcmp(Player1_MouveL,"a")==0)
+                    {
+                        I.left = 0;
+                    hero.currentMode = 1;
+                    run = 0;
+                    }
+                    else if(strcmp(Player1_Run,"a")==0)
+                    {
+                        test_velocity = 10;
+                    if (hero.currentMode == 2)
+                    {
+                        hero.currentMode = 6;
+                    }
+                    else if (hero.currentMode == 3)
+                    {
+                        hero.currentMode = 7;
+                    }
+                    }
+                    else if(strcmp(Player1_Attack,"a")==0)
+                    {
+                        I.attack = 0;
+                    if (strcmp(direction, "right") == 0)
+                    {
+                        hero.currentMode = 0;
+                    }
+                    else
+                    {
+                        hero.currentMode = 1;
+                    }
+                    }
+
+                    break;
                 case SDLK_SPACE:
                     I.jump = 0;
                     if (I.right == 1)

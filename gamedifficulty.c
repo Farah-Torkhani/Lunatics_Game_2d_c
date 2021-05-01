@@ -162,6 +162,7 @@ int gamedifficulty(SDL_Surface *screen)
                     {
                        if(selectchamp(screen)==1)
                       {
+                          stage_1(screen, 1);
                           done=0;
                           return 1;
                       }
